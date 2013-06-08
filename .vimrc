@@ -1,5 +1,5 @@
 " use Tim Pope's pathogen
-execute pathogen#infect()
+"execute pathogen#infect()
 syntax on
 "filetype plugin indent on
 
@@ -41,6 +41,6 @@ set incsearch
 "  set background=dark
 "endif
 "set background=light
-colorscheme solarized
-se t_Co=16
-let g:solarized_termcolors=256
+"colorscheme solarized
+"se t_Co=16
+"let g:solarized_termcolors=256
