@@ -1,5 +1,5 @@
 " use Tim Pope's pathogen
-"execute pathogen#infect()
+execute pathogen#infect()
 syntax on
 "filetype plugin indent on
 
@@ -7,6 +7,7 @@ set laststatus=2
 set wildmenu
 set autoread
 set number
+set mouse=a
 set cursorline
 set hidden
 
@@ -41,6 +42,20 @@ set incsearch
 "  set background=dark
 "endif
 "set background=light
-"colorscheme solarized
-"se t_Co=16
-"let g:solarized_termcolors=256
+colorscheme solarized
+se t_Co=16
+let g:solarized_termcolors=256
+
+"Enable and disable mouse use
+noremap <f12> :call ToggleMouse() <CR>
+function! ToggleMouse()
+if &mouse == 'a'
+set mouse=
+set nonumber
+echo "Mouse usage disabled"
+else    
+set mouse=a
+set number
+echo "Mouse usage enabled"
+endif   
+endfunction
