@@ -42,9 +42,9 @@ set incsearch
 "  set background=dark
 "endif
 "set background=light
-colorscheme solarized
-se t_Co=16
-let g:solarized_termcolors=256
+"colorscheme solarized
+"se t_Co=16
+"let g:solarized_termcolors=256
 
 "Enable and disable mouse use
 noremap <f12> :call ToggleMouse() <CR>
