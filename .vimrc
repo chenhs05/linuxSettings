@@ -1,5 +1,5 @@
 " use Tim Pope's pathogen
-execute pathogen#infect()
+" execute pathogen#infect()
 syntax on
 "filetype plugin indent on
 
@@ -9,6 +9,7 @@ set autoread
 set number
 set mouse=a
 set cursorline
+highlight CursorLine cterm=NONE ctermbg=grey
 set hidden
 
 " REQUIRED. This makes vim invoke Latex-Suite when you open a tex file.
@@ -33,18 +34,6 @@ syn sync fromstart
 set foldmethod=syntax
 set foldlevelstart=20
 set incsearch
-
-" use solarized color scheme
-"set background=dark
-"if has('gui_running')
-"  set background=light
-"else
-"  set background=dark
-"endif
-"set background=light
-"colorscheme solarized
-"se t_Co=16
-"let g:solarized_termcolors=256
 
 "Enable and disable mouse use
 noremap <f12> :call ToggleMouse() <CR>
