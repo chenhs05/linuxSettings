@@ -87,7 +87,8 @@ function prompt_func() {
 
 # PROMPT_COMMAND=prompt_func
 
-
+# show only the last three directory on the path
+export PROMPT_DIRTRIM=3
 
 
 # set a fancy prompt (non-color, unless we know we "want" color)
