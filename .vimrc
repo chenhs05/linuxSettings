@@ -48,3 +48,6 @@ set number
 echo "Mouse usage enabled"
 endif   
 endfunction
+
+" for git commit message
+autocmd Filetype gitcommit setlocal spell textwidth=72
