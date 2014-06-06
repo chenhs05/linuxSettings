@@ -47,6 +47,15 @@ COLOR_NONE="\[\e[0m\]"
 
 function parse_git_branch {
  
+	local RED="\033[0;31m"
+	local YELLOW="\033[0;33m"
+	local GREEN="\033[0;32m"
+	local BLUE="\033[0;34m"
+	local LIGHT_RED="\033[1;31m"
+	local LIGHT_GREEN="\033[1;32m"
+	local WHITE="\033[1;37m"
+	local LIGHT_GRAY="\033[0;37m"
+	local COLOR_NONE="\e[0m"
 	git rev-parse --git-dir &> /dev/null
         git_status="$(git status 2> /dev/null)"   #THE STATUS TAKES TOO LONG FOR LARGE REPOS
         branch_pattern="^# On branch ([^${IFS}]*)"
@@ -68,15 +77,16 @@ function parse_git_branch {
         fi
         if [[ ${git_status} =~ ${branch_pattern} ]]; then
       		branch=${BASH_REMATCH[1]}
-       	echo " (${branch})${remote}${state}"
+		echo -e " (${branch})${remote}${state}"
         fi
 }
+
 
 function prompt_func() {
     	previous_return_value=$?;
     	# prompt="${TITLEBAR}$BLUE[$RED\w$GREEN$(__git_ps1)$YELLOW$(git_dirty_flag)$BLUE]$COLOR_NONE "
     	# prompt="${TITLEBAR}${GREEN}\u@${BLACK}\h:${BLUE}[${RED}\w${GREEN}$(parse_git_branch)${BLUE}]${COLOR_NONE} "
-	prompt="${debian_chroot:+($debian_chroot)}${GREEN}\u@${COLOR_NONE}\h:${BLUE}[${RED}\w${GREEN}$(parse_git_branch)${BLUE}]${COLOR_NONE} "
+	prompt="${debian_chroot:+($debian_chroot)}${GREEN}\u@${COLOR_NONE}\h:${BLUE}[${RED}\w${GREEN}\$(parse_git_branch)${BLUE}]${COLOR_NONE} "
     	if test $previous_return_value -eq 0
    	then
 		PS1="${prompt}$ "
@@ -115,7 +125,8 @@ fi
 if [ "$color_prompt" = yes ]; then
     #PS1='${debian_chroot:+($debian_chroot)}\[\033[01;32m\]\u@\h\[\033[00m\]:\[\033[01;34m\]\w\[\033[00m\]\$ '
     #PS1="${debian_chroot:+($debian_chroot)}${GREEN}\u@${COLOR_NONE}\h:${BLUE}[${RED}\w${GREEN}$(parse_git_branch)${BLUE}]${COLOR_NONE}\$${COLOR_NONE} "
-	PROMPT_COMMAND=prompt_func
+	#PROMPT_COMMAND=prompt_func
+	prompt_func
 else
     PS1='${debian_chroot:+($debian_chroot)}\u@\h:\w\$ '
 fi
@@ -124,7 +135,8 @@ unset color_prompt force_color_prompt
 # If this is an xterm set the title to user@host:dir
 case "$TERM" in
 xterm*|rxvt*)
-    PS1="\[\e]0;${debian_chroot:+($debian_chroot)}\u@\h: \w\a\]$PS1"
+    #PROMPT_COMMAND="\[\e]0;${debian_chroot:+($debian_chroot)}\u@\h: \w\a\]$PS1"
+    PROMPT_COMMAND='echo -ne "\033]0;${USER}@${HOSTNAME}: ${PWD}\007"'
     ;;
 *)
     ;;
@@ -166,4 +178,4 @@ fi
 if [ -f /etc/bash_completion ] && ! shopt -oq posix; then
     . /etc/bash_completion
 fi
-. /usr/local/bin/thisroot.sh
+#. /usr/local/bin/thisroot.sh
