@@ -1,0 +1,15 @@
+
+1. Disabling tracker for globally (for all users)
+Edit /etc/xdg/autostart/trackerd.desktop file with root priviledges (sudo vim, gksudo gedit ...)
+Add "Hidden=true" to the end of the file
+Do the same for /etc/xdg/autostart/tracker-applet.desktop if you want
+
+2. Disabling tracker for your user only
+Enter the directory "~/.config/autostart", create it if it does not exist
+Create a file named trackerd.desktop
+Paste the following into the file, save and exit
+
+      [Desktop Entry]
+      Encoding=UTF-8
+      Name=Tracker
+      Hidden=true
