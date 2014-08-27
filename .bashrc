@@ -46,22 +46,21 @@ LIGHT_GRAY="\[\033[0;37m\]"
 COLOR_NONE="\[\e[0m\]"
 
 function parse_git_branch {
- 
-	local RED="\033[0;31m"
-	local YELLOW="\033[0;33m"
-	local GREEN="\033[0;32m"
-	local BLUE="\033[0;34m"
-	local LIGHT_RED="\033[1;31m"
-	local LIGHT_GREEN="\033[1;32m"
-	local WHITE="\033[1;37m"
-	local LIGHT_GRAY="\033[0;37m"
-	local COLOR_NONE="\e[0m"
+	local RED="\001\033[0;31m\002"
+	local YELLOW="\001\033[0;33m\002"
+	local GREEN="\001\033[0;32m\002"
+	local BLUE="\001\033[0;34m\002"
+	local LIGHT_RED="\001\033[1;31m\002"
+	local LIGHT_GREEN="\001\033[1;32m\002"
+	local WHITE="\001\033[1;37m\002"
+	local LIGHT_GRAY="\001\033[0;37m\002"
+	local COLOR_NONE="\001\e[0m\002"
 	git rev-parse --git-dir &> /dev/null
         git_status="$(git status 2> /dev/null)"   #THE STATUS TAKES TOO LONG FOR LARGE REPOS
         branch_pattern="^# On branch ([^${IFS}]*)"
         remote_pattern="# Your branch is (.*) of"
         diverge_pattern="# Your branch and (.*) have diverged"
-        if [[ ! ${git_status}} =~ "working directory clean" ]]; then
+        if [[ ! ${git_status} =~ "working directory clean" ]]; then
         	state="${RED}⚡"
         fi
 	# add an else if or two here if you want to get more specific
@@ -89,7 +88,7 @@ function prompt_func() {
 	prompt="${debian_chroot:+($debian_chroot)}${GREEN}\u@${COLOR_NONE}\h:${BLUE}[${RED}\w${GREEN}\$(parse_git_branch)${BLUE}]${COLOR_NONE} "
     	if test $previous_return_value -eq 0
    	then
-		PS1="${prompt}$ "
+		PS1="${prompt}\$ "
 	else
 	        PS1="${prompt}${RED}\$${COLOR_NONE} "
 	fi 
