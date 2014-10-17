@@ -85,12 +85,12 @@ function prompt_func() {
     	previous_return_value=$?;
     	# prompt="${TITLEBAR}$BLUE[$RED\w$GREEN$(__git_ps1)$YELLOW$(git_dirty_flag)$BLUE]$COLOR_NONE "
     	# prompt="${TITLEBAR}${GREEN}\u@${BLACK}\h:${BLUE}[${RED}\w${GREEN}$(parse_git_branch)${BLUE}]${COLOR_NONE} "
-	prompt="${debian_chroot:+($debian_chroot)}${GREEN}\u@${COLOR_NONE}\h:${BLUE}[${RED}\w${GREEN}\$(parse_git_branch)${BLUE}]${COLOR_NONE} "
+	prompt="${debian_chroot:+($debian_chroot)}${GREEN}\u${COLOR_NONE}@${GREEN}\h:${BLUE}[${RED}\w${GREEN}\$(parse_git_branch)${BLUE}] "
     	if test $previous_return_value -eq 0
    	then
-		PS1="${prompt}\$ "
+		PS1="${prompt}${BLUE}>>${COLOR_NONE} "
 	else
-	        PS1="${prompt}${RED}\$${COLOR_NONE} "
+	        PS1="${prompt}${RED}>>${COLOR_NONE} "
 	fi 
 }
 
@@ -156,6 +156,7 @@ fi
 # some more ls aliases
 alias ll='ls -alF'
 alias la='ls -A'
+alias lt='ls -lhrt'
 alias l='ls -CF'
 
 # Add an "alert" alias for long running commands.  Use like so:
