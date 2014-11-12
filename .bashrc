@@ -33,6 +33,34 @@ if [ -z "$debian_chroot" ] && [ -r /etc/debian_chroot ]; then
 fi
 
 
+# ---
+# Enable 256 color capabilities for appropriate terminals
+
+# Set this variable in your local shell config if you want remote
+# xterms connecting to this system, to be sent 256 colors.
+# This can be done in /etc/csh.cshrc, or in an earlier profile.d script.
+#   SEND_256_COLORS_TO_REMOTE=1
+
+# Terminals with any of the following set, support 256 colors (and are local)
+local256="$COLORTERM$XTERM_VERSION$ROXTERM_ID$KONSOLE_DBUS_SESSION"
+
+if [ -n "$local256" ] || [ -n "$SEND_256_COLORS_TO_REMOTE" ]; then
+
+  case "$TERM" in
+    'xterm') TERM=xterm-256color;;
+    'screen') TERM=screen-256color;;
+    'Eterm') TERM=Eterm-256color;;
+  esac
+  export TERM
+
+  if [ -n "$TERMCAP" ] && [ "$TERM" = "screen-256color" ]; then
+    TERMCAP=$(echo "$TERMCAP" | sed -e 's/Co#8/Co#256/g')
+    export TERMCAP
+  fi
+fi
+
+unset local256
+# ----
 
 
 RED="\[\033[0;31m\]"
@@ -45,47 +73,56 @@ WHITE="\[\033[1;37m\]"
 LIGHT_GRAY="\[\033[0;37m\]"
 COLOR_NONE="\[\e[0m\]"
 
-function parse_git_branch {
-	local RED="\001\033[0;31m\002"
-	local YELLOW="\001\033[0;33m\002"
-	local GREEN="\001\033[0;32m\002"
-	local BLUE="\001\033[0;34m\002"
-	local LIGHT_RED="\001\033[1;31m\002"
-	local LIGHT_GREEN="\001\033[1;32m\002"
-	local WHITE="\001\033[1;37m\002"
-	local LIGHT_GRAY="\001\033[0;37m\002"
-	local COLOR_NONE="\001\e[0m\002"
-	git rev-parse --git-dir &> /dev/null
-        git_status="$(git status 2> /dev/null)"   #THE STATUS TAKES TOO LONG FOR LARGE REPOS
-        branch_pattern="^# On branch ([^${IFS}]*)"
-        remote_pattern="# Your branch is (.*) of"
-        diverge_pattern="# Your branch and (.*) have diverged"
-        if [[ ! ${git_status} =~ "working directory clean" ]]; then
-        	state="${RED}⚡"
-        fi
-	# add an else if or two here if you want to get more specific
-	if [[ ${git_status} =~ ${remote_pattern} ]]; then
-        if [[ ${BASH_REMATCH[1]} == "ahead" ]]; then
-        	remote="${YELLOW}↑"
-	else
-        	remote="${YELLOW}↓"
-        fi
-     	fi
-      	if [[ ${git_status} =~ ${diverge_pattern} ]]; then
-               	remote="${YELLOW}↕"
-        fi
-        if [[ ${git_status} =~ ${branch_pattern} ]]; then
-      		branch=${BASH_REMATCH[1]}
-		echo -e " (${branch})${remote}${state}"
-        fi
-}
+# function parse_git_branch {
+# 	local RED="\001\033[0;31m\002"
+# 	local YELLOW="\001\033[0;33m\002"
+# 	local GREEN="\001\033[0;32m\002"
+# 	local BLUE="\001\033[0;34m\002"
+# 	local LIGHT_RED="\001\033[1;31m\002"
+# 	local LIGHT_GREEN="\001\033[1;32m\002"
+# 	local WHITE="\001\033[1;37m\002"
+# 	local LIGHT_GRAY="\001\033[0;37m\002"
+# 	local COLOR_NONE="\001\e[0m\002"
+# 	git rev-parse --git-dir &> /dev/null
+#         git_status="$(git status 2> /dev/null)"   #THE STATUS TAKES TOO LONG FOR LARGE REPOS
+#         branch_pattern="^On branch ([^${IFS}]*)"
+#         remote_pattern="Your branch is (.*) of"
+#         diverge_pattern="Your branch and (behind|ahead) "
+# #	echo $git_status
+# #	echo $branch_pattern
+# #	echo $remote_pattern
+# #	echo $diverge_pattern
+#         if [[ ! ${git_status} =~ "working directory clean" ]]; then
+#         	state="${RED}⚡"
+#         fi
+# 	# add an else if or two here if you want to get more specific
+# 	if [[ ${git_status} =~ ${remote_pattern} ]]; then
+#         if [[ ${BASH_REMATCH[1]} == "ahead" ]]; then
+#         	remote="${YELLOW}↑"
+# 	else
+#         	remote="${YELLOW}↓"
+#         fi
+#      	fi
+#       	if [[ ${git_status} =~ ${diverge_pattern} ]]; then
+#                	remote="${YELLOW}↕"
+#         fi
+#         if [[ ${git_status} =~ ${branch_pattern} ]]; then
+#       		branch=${BASH_REMATCH[1]}
+# 		echo -e " (${branch})${remote}${state}"
+#         fi
+# }
 
+# for __git_ps1 parameters
+GIT_PS1_SHOWDIRTYSTATE=1
+GIT_PS1_SHOWUPSTREAM="auto"
+GIT_PS1_SHOWCOLORHINTS=1
 
 function prompt_func() {
     	previous_return_value=$?;
     	# prompt="${TITLEBAR}$BLUE[$RED\w$GREEN$(__git_ps1)$YELLOW$(git_dirty_flag)$BLUE]$COLOR_NONE "
     	# prompt="${TITLEBAR}${GREEN}\u@${BLACK}\h:${BLUE}[${RED}\w${GREEN}$(parse_git_branch)${BLUE}]${COLOR_NONE} "
-	prompt="${debian_chroot:+($debian_chroot)}${GREEN}\u${COLOR_NONE}@${GREEN}\h:${BLUE}[${RED}\w${GREEN}\$(parse_git_branch)${BLUE}] "
+	# prompt="${debian_chroot:+($debian_chroot)}${GREEN}\u${COLOR_NONE}@${GREEN}\h:${BLUE}[${RED}\w${GREEN}\$(parse_git_branch)${BLUE}] "
+	prompt="${debian_chroot:+($debian_chroot)}${GREEN}\u${COLOR_NONE}@${GREEN}\h:${BLUE}[${RED}\w${GREEN}\$(__git_ps1)${BLUE}] "
     	if test $previous_return_value -eq 0
    	then
 		PS1="${prompt}${BLUE}>>${COLOR_NONE} "
@@ -124,7 +161,6 @@ fi
 if [ "$color_prompt" = yes ]; then
     #PS1='${debian_chroot:+($debian_chroot)}\[\033[01;32m\]\u@\h\[\033[00m\]:\[\033[01;34m\]\w\[\033[00m\]\$ '
     #PS1="${debian_chroot:+($debian_chroot)}${GREEN}\u@${COLOR_NONE}\h:${BLUE}[${RED}\w${GREEN}$(parse_git_branch)${BLUE}]${COLOR_NONE}\$${COLOR_NONE} "
-	#PROMPT_COMMAND=prompt_func
 	prompt_func
 else
     PS1='${debian_chroot:+($debian_chroot)}\u@\h:\w\$ '
