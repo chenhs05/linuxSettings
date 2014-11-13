@@ -1,5 +1,35 @@
-" use Tim Pope's pathogen
-" execute pathogen#infect()
+" for Vundle to organize the plugin
+set nocompatible              " be iMproved, required
+filetype off                  " required
+
+" set the runtime path to include Vundle and initialize
+set rtp+=~/.vim/bundle/Vundle.vim
+call vundle#begin()
+
+" let Vundle manage Vundle, required
+Plugin 'gmarik/Vundle.vim'
+
+" Keep Plugin commands between vundle#begin/end.
+Plugin 'tpope/vim-fugitive'
+Plugin 'scrooloose/nerdtree'
+Plugin 'xolox/vim-misc'
+Plugin 'xolox/vim-easytags'
+Plugin 'LaTeX-Box-Team/LaTeX-Box'
+Plugin 'altercation/vim-colors-solarized'
+Plugin 'taglist.vim'
+
+" All of your Plugins must be added before the following line
+call vundle#end()            " required
+filetype plugin indent on    " required
+
+
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" here start my own .vimrc
+
+
+"for fugitive
+set diffopt+=vertical
+
 syntax on
 "filetype plugin indent on
 
@@ -9,7 +39,7 @@ set autoread
 set number
 set mouse=a
 set cursorline
-highlight CursorLine cterm=NONE ctermbg=grey
+" highlight CursorLine cterm=NONE ctermbg=grey
 set hidden
 
 " REQUIRED. This makes vim invoke Latex-Suite when you open a tex file.
@@ -35,6 +65,17 @@ set foldmethod=syntax
 set foldlevelstart=20
 set incsearch
 
+" for solarized
+syntax enable
+" if has('gui_running')
+"     set background=light
+" else
+"     set background=dark
+" endif
+set background=light
+let g:solarized_termcolors=256
+colorscheme solarized
+
 "Enable and disable mouse use
 noremap <f12> :call ToggleMouse() <CR>
 function! ToggleMouse()
@@ -42,11 +83,11 @@ if &mouse == 'a'
 set mouse=
 set nonumber
 echo "Mouse usage disabled"
-else    
+else
 set mouse=a
 set number
 echo "Mouse usage enabled"
-endif   
+endif
 endfunction
 
 " for git commit message
