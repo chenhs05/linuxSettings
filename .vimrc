@@ -43,6 +43,8 @@ set mouse=a
 set cursorline
 " highlight CursorLine cterm=NONE ctermbg=grey
 set hidden
+" backspace act as in the other program
+set backspace=2
 " }}}
 "
 " folding {{{
@@ -92,12 +94,21 @@ set diffopt+=vertical
 " " search in a singe file. This will confuse Latex-Suite. Set your grep
 " " program to always generate a file-name.
 set grepprg=grep\ -nH\ $*
+
 " OPTIONAL: Starting with Vim 7, the filetype of empty .tex files defaults to
 " " 'plaintex' instead of 'tex', which results in vim-latex not being loaded.
 " " The following changes the default filetype back to 'tex':
 let g:tex_flavor='latex'
+
+" " use latexmk to make the pdf file
+" let g:Tex_DefaultTargetFormat = 'pdf'
+" " let g:Tex_CompileRule_pdf = 'latexmk -pdf -f $*'
+" let g:Tex_CompileRule_pdf = 'latexmk -pdf'
+" set iskeyword+=:
+
 " "turn on omnicompletion
 " set ofu=syntaxcomplete#Complete
+
 " truncate the length of the line
 autocmd Filetype tex setlocal textwidth=80
 " }}}
