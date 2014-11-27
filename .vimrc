@@ -1,3 +1,7 @@
+if $SHELL =~ 'bin/fish'
+set shell=/bin/bash
+endif
+
 " vim:foldmethod=marker:foldlevel=0
 "
 " plugins (Vundle) {{{
