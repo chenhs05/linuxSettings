@@ -23,6 +23,7 @@ Plugin 'xolox/vim-easytags'
 Plugin 'LaTeX-Box-Team/LaTeX-Box'
 Plugin 'altercation/vim-colors-solarized'
 Plugin 'taglist.vim'
+Plugin 'drmikehenry/vim-headerguard'
 
 " complete and snips, not yet configured
 Plugin 'Shougo/neocomplete.vim'
@@ -49,6 +50,7 @@ set cursorline
 set hidden
 " backspace act as in the other program
 set backspace=2
+set hlsearch 
 " }}}
 "
 " folding {{{
@@ -60,13 +62,12 @@ set incsearch
 "
 " solarized {{{
 syntax enable
-" if has('gui_running')
-"     set background=light
-" else
-"     set background=dark
-" endif
-set background=light
-let g:solarized_termcolors=256
+if has('gui_running')
+	set background=light
+else
+	set background=dark
+	let g:solarized_termcolors=16
+endif
 colorscheme solarized
 " }}}
 "
@@ -115,6 +116,7 @@ let g:tex_flavor='latex'
 
 " truncate the length of the line
 autocmd Filetype tex setlocal textwidth=80
+" autocmd Filetype tex setlocal spell
 " }}}
 "
 " neocomplte {{{
@@ -149,29 +151,17 @@ inoremap <expr><C-l>     neocomplete#complete_common_string()
 " <CR>: close popup and save indent.
 inoremap <silent> <CR> <C-r>=<SID>my_cr_function()<CR>
 function! s:my_cr_function()
-  return neocomplete#close_popup() . "\<CR>"
+  " return (pumvisible() ? "\<C-y>" : "" ) . "\<CR>"
   " For no inserting <CR> key.
-  "return pumvisible() ? neocomplete#close_popup() : "\<CR>"
+  return pumvisible() ? "\<C-y>" : "\<CR>"
 endfunction
 " <TAB>: completion.
 inoremap <expr><TAB>  pumvisible() ? "\<C-n>" : "\<TAB>"
 " <C-h>, <BS>: close popup and delete backword char.
 inoremap <expr><C-h> neocomplete#smart_close_popup()."\<C-h>"
 inoremap <expr><BS> neocomplete#smart_close_popup()."\<C-h>"
-inoremap <expr><C-y>  neocomplete#close_popup()
-inoremap <expr><C-e>  neocomplete#cancel_popup()
 " Close popup by <Space>.
-"inoremap <expr><Space> pumvisible() ? neocomplete#close_popup() : "\<Space>"
-
-" For cursor moving in insert mode(Not recommended)
-"inoremap <expr><Left>  neocomplete#close_popup() . "\<Left>"
-"inoremap <expr><Right> neocomplete#close_popup() . "\<Right>"
-"inoremap <expr><Up>    neocomplete#close_popup() . "\<Up>"
-"inoremap <expr><Down>  neocomplete#close_popup() . "\<Down>"
-" Or set this.
-"let g:neocomplete#enable_cursor_hold_i = 1
-" Or set this.
-"let g:neocomplete#enable_insert_char_pre = 1
+"inoremap <expr><Space> pumvisible() ? "\<C-y>" : "\<Space>"
 
 " AutoComplPop like behavior.
 "let g:neocomplete#enable_auto_select = 1
@@ -199,25 +189,31 @@ endif
 
 " For perlomni.vim setting.
 " https://github.com/c9s/perlomni.vim
-let g:neocomplete#sources#omni#input_patterns.perl = '\h\w*->\h\w*\|\h\w*::'"
+let g:neocomplete#sources#omni#input_patterns.perl = '\h\w*->\h\w*\|\h\w*::'
 " }}}
 "
 " neosnippet {{{
-" " Plugin key-mappings.
+" Plugin key-mappings.
 imap <C-k>     <Plug>(neosnippet_expand_or_jump)
 smap <C-k>     <Plug>(neosnippet_expand_or_jump)
 xmap <C-k>     <Plug>(neosnippet_expand_target)
 
 " SuperTab like snippets behavior.
-imap <expr><TAB> neosnippet#expandable_or_jumpable() ?
-\ "\<Plug>(neosnippet_expand_or_jump)"
-\: pumvisible() ? "\<C-n>" : "\<TAB>"
+"imap <expr><TAB>
+" \ pumvisible() ? "\<C-n>" :
+" \ neosnippet#expandable_or_jumpable() ?
+" \    "\<Plug>(neosnippet_expand_or_jump)" : "\<TAB>"
 smap <expr><TAB> neosnippet#expandable_or_jumpable() ?
-\ "\<Plug>(neosnippet_expand_or_jump)"
-\: "\<TAB>"
+\ "\<Plug>(neosnippet_expand_or_jump)" : "\<TAB>"
 
-" For snippet_complete marker.
+" For conceal markers.
 if has('conceal')
-  set conceallevel=2 concealcursor=i
+  set conceallevel=2 concealcursor=niv
 endif
 " }}}
+"
+" headerguard {{{
+function! g:HeaderguardName()
+	return "__" . toupper(expand('%:t:gs/[^0-9a-zA-Z_]/_/g'))
+endfunction
+"}}}
