@@ -171,3 +171,8 @@ fi
 if [ -f /etc/bash_completion ] && ! shopt -oq posix; then
     . /etc/bash_completion
 fi
+
+### load the functions for tmux
+if [ -f ~/.tmux_functions ]; then
+	. ~/.tmux_functions
+fi
