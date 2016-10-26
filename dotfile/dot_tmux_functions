@@ -15,7 +15,7 @@ if [ -n "$TMUX" ]; then
 		echo New DISPLAY =  $DISPLAY  
 	}                                                                                                 
 
-	function tmux_execute_in_all_panes {
+	function execute_in_all_tmux_panes {
 
 	  # Notate which window/pane we were originally at
 	  ORIG_WINDOW_INDEX=`tmux display-message -p '#I'`
@@ -75,7 +75,7 @@ else
 	function refresh_tmux {
 		echo "Not in TMUX, empty function here!"
 	}                                                                              
-	function tmux_execute_in_all_panes {
+	function execute_in_all_tmux_panes {
 		echo "Not in TMUX, empty function here!"
 	}
 fi
