@@ -20,7 +20,7 @@ Plugin 'tpope/vim-fugitive'
 Plugin 'scrooloose/nerdtree'
 Plugin 'xolox/vim-misc'
 Plugin 'xolox/vim-easytags'
-Plugin 'LaTeX-Box-Team/LaTeX-Box'
+Plugin 'lervag/vimtex'
 Plugin 'altercation/vim-colors-solarized'
 Plugin 'majutsushi/tagbar'
 Plugin 'drmikehenry/vim-headerguard'
@@ -54,11 +54,12 @@ set incsearch
 "use omnicomplete whenever there's no completion engine in youcompleteme (for
 "example, in the case of PHP)
 set omnifunc=syntaxcomplete#Complete
+"personalized status line with more information
 set statusline=%t[%{strlen(&fenc)?&fenc:'none'},%{&ff}]%h%r%y(%n)\ %m%=%c,%l/%L\ %P
 "}}}
 
 " ingore some filetype{{{
-set wildignore+=*.pdf,*.o,*.obj,*.jpg,*.png,*.swp
+set wildignore+=*.o,*.obj,*.swp
 " }}}
 "
 " VHDL Stuff {{{
@@ -96,10 +97,11 @@ set foldlevelstart=20
 syntax enable
 if has('gui_running')
 	set background=light
-	let g:solarized_termcolors=256
+	"let g:solarized_termcolors=256
 else
-	set background=dark
-	" let g:solarized_termcolors=16
+	set background=light
+	"let g:solarized_termcolors=256
+	"set t_Co=16
 endif
 colorscheme solarized
 " }}}
@@ -132,21 +134,25 @@ set diffopt+=vertical
 " }}}
 
 " latex {{{
+"
+" OPTIONAL: Starting with Vim 7, the filetype of empty .tex files defaults to
+" " 'plaintex' instead of 'tex', which results in vim-latex not being loaded.
+" " The following changes the default filetype back to 'tex':
+let g:tex_flavor='latex'
+
 " truncate the length of the line
-autocmd Filetype tex setlocal textwidth=80
+autocmd Filetype tex setlocal textwidth=120
 autocmd Filetype tex setlocal spell
 
-" for latex-box
-autocmd Filetype tex setlocal smartindent
-" autocmd Filetype tex call Ycm_latex_box()
-"
-" function Ycm_latex_box()
-" 	" Add triggers to ycm for LaTeX-Box autocompletion
-" 	let g:ycm_semantic_triggers = {
-" 	\  'tex'  : ['{'],
-" 	\ }
-" endfunction
-"
+" " for latex-box
+" autocmd Filetype tex setlocal smartindent
+" "
+" for vimtex
+let g:vimtex_latexmk_continuous = 1
+let g:vimtex_latexmk_background = 1
+let g:vimtex_view_general_viewer = 'qpdfview'
+let g:vimtex_view_general_options = '--unique @pdf\#src:@tex:@line:@col'
+let g:vimtex_view_general_options_latexmk = '--unique'
 " }}}
 "
 " headerguard {{{
@@ -165,3 +171,6 @@ nmap <F8> :TagbarToggle<CR>
 let g:tagbar_left=1
 " }}}
 "
+" To load local vimrc {{{
+set exrc
+"}}}
