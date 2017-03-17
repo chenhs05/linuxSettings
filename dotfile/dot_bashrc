@@ -39,10 +39,12 @@ fi
 # Set this variable in your local shell config if you want remote
 # xterms connecting to this system, to be sent 256 colors.
 # This can be done in /etc/csh.cshrc, or in an earlier profile.d script.
-SEND_256_COLORS_TO_REMOTE=1
+#   SEND_256_COLORS_TO_REMOTE=1
 
 # Terminals with any of the following set, support 256 colors (and are local)
 local256="$COLORTERM$XTERM_VERSION$ROXTERM_ID$KONSOLE_DBUS_SESSION"
+# force 256color
+local256=1
 
 if [ -n "$local256" ] || [ -n "$SEND_256_COLORS_TO_REMOTE" ]; then
 
@@ -53,21 +55,22 @@ if [ -n "$local256" ] || [ -n "$SEND_256_COLORS_TO_REMOTE" ]; then
   esac
   export TERM
 
-  if [ -n "$TERMCAP" ] && [ "$TERM" = "screen-256color" ]; then
-    TERMCAP=$(echo "$TERMCAP" | sed -e 's/Co#8/Co#256/g')
-    export TERMCAP
-  fi
+#  if [ -n "$TERMCAP" ] && [ "$TERM" = "screen-256color" ]; then
+#    TERMCAP=$(echo "$TERMCAP" | sed -e 's/Co#8/Co#256/g')
+#    export TERMCAP
+#  fi
 fi
 
 unset local256
 # ----
-                                                                                                                                                      
+
 RED="\001\033[0;31m\002"
 YELLOW="\001\033[0;33m\002"
 GREEN="\001\033[0;32m\002"
 BLUE="\001\033[0;34m\002"
 LIGHT_RED="\001\033[1;31m\002"
 LIGHT_GREEN="\001\033[1;32m\002"
+LIGHT_BLUE="\001\033[1;34m\002"
 WHITE="\001\033[1;37m\002"
 LIGHT_GRAY="\001\033[0;37m\002"
 COLOR_NONE="\001\e[0m\002"
@@ -79,12 +82,12 @@ GIT_PS1_SHOWCOLORHINTS=1
 
 function prompt_func() {
 	previous_return_value=$?;
-	prompt="${debian_chroot:+($debian_chroot)}${GREEN}\u${COLOR_NONE}@${GREEN}\h:${BLUE}[${RED}\w${GREEN}\$(__git_ps1)${BLUE}] "
+	prompt="${debian_chroot:+($debian_chroot)}${GREEN}\u${COLOR_NONE}@${GREEN}\h:${LIGHT_BLUE}[${LIGHT_RED}\w${GREEN}\$(__git_ps1)${LIGHT_BLUE}] "
 	if test $previous_return_value -eq 0
 	then
 		PS1="${prompt}${GREEN}>>${COLOR_NONE} "
 	else
-		PS1="${prompt}${RED}>>${COLOR_NONE} "
+	        PS1="${prompt}${LIGHT_RED}>>${COLOR_NONE} "
 	fi
 }
 
@@ -95,7 +98,7 @@ export PROMPT_DIRTRIM=3
 
 # set a fancy prompt (non-color, unless we know we "want" color)
 case "$TERM" in
-    xterm-*color) color_prompt=yes;;
+    xterm-color) color_prompt=yes;;
 esac
 
 # uncomment for a colored prompt, if the terminal has the capability; turned
@@ -117,7 +120,6 @@ fi
 if [ "$color_prompt" = yes ]; then
     #PS1='${debian_chroot:+($debian_chroot)}\[\033[01;32m\]\u@\h\[\033[00m\]:\[\033[01;34m\]\w\[\033[00m\]\$ '
     #PS1="${debian_chroot:+($debian_chroot)}${GREEN}\u@${COLOR_NONE}\h:${BLUE}[${RED}\w${GREEN}$(parse_git_branch)${BLUE}]${COLOR_NONE}\$${COLOR_NONE} "
-	#PROMPT_COMMAND=prompt_func
 	prompt_func
 else
     PS1='${debian_chroot:+($debian_chroot)}\u@\h:\w\$ '
@@ -172,7 +174,26 @@ if [ -f /etc/bash_completion ] && ! shopt -oq posix; then
     . /etc/bash_completion
 fi
 
+#####################################################################
+######## here comes the personal settings
+#####################################################################
+# # load nicer dirctory colors
+# eval `dircolors ~/.dir_colors/dircolors`
+
 ### load the functions for tmux
 if [ -f ~/.tmux_functions ]; then
 	. ~/.tmux_functions
 fi
+
+# disable beep sound
+if [[ "$DISPLAY" ]]; then
+#	echo "xset b off"
+	xset b off
+else
+#	echo "setterm -blength 0"
+	setterm -blength 0
+fi
+
+# alias vim/vi to noevim
+alias vi=nvim
+alias vim=nvim

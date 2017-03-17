@@ -63,28 +63,9 @@ set wildignore+=*.o,*.obj,*.swp
 " }}}
 "
 " VHDL Stuff {{{
-au filetype vhdl setlocal foldmethod=marker foldlevel=1 softtabstop=4 tabstop=4
-au filetype vhd setlocal foldmethod=marker foldlevel=1 softtabstop=4 tabstop=4
+au filetype vhdl setlocal foldmethod=marker foldlevel=1 softtabstop=4 tabstop=4 sw=4
+au filetype vhd setlocal foldmethod=marker foldlevel=1 softtabstop=4 tabstop=4 sw=4
 
-" "some complicated setting from the internet {{{
-" if has("autocmd")
-" 	filetype plugin indent on
-" "	filetype dependent settings
-" 	au Filetype vhdl call FT_vhdl()
-" else
-" 	set autoindent
-" endif
-"
-" function FT_vhdl()
-" 	if exists("+omnifunc")
-" 		setlocal omnifunc=syntaxcomplete#Complete
-" 	endif
-" 	setlocal errorformat=ERROR:%.%#\ -\ \"\%f\"\ Line\ %l.\ %m,%EERROR:%m,%C\[%f(%l)\]:\ %m,%C%m,%Z%m
-" 	let g:vhdl_indent_genportmap=0
-" "	for taglist
-" 	let g:tlist_vhdl_settings   = 'vhdl;d:package declarations;b:package bodies;e:entities;a:architecture specifications;t:type declarations;p:processes;f:functions;m:port maps;r:procedures'
-" endfunction
-"}}}
 " }}}
 "
 " folding {{{
@@ -99,7 +80,12 @@ if has('gui_running')
 	set background=light
 	"let g:solarized_termcolors=256
 else
-	set background=light
+	let hour = strftime("%H")
+	if hour >= 6 && hour <= 18
+		set background=light
+	else
+		set background=dark
+	endif
 	"let g:solarized_termcolors=256
 	"set t_Co=16
 endif
@@ -110,13 +96,13 @@ colorscheme solarized
 noremap <f12> :call ToggleMouse() <CR>
 function! ToggleMouse()
 if &mouse == 'a'
-set mouse=
-set nonumber
-echo "Mouse usage disabled"
+	set mouse=
+	set nonumber
+	echo "Mouse usage disabled"
 else
-set mouse=a
-set number
-echo "Mouse usage enabled"
+	set mouse=a
+	set number
+	echo "Mouse usage enabled"
 endif
 endfunction
 " }}}
@@ -134,25 +120,31 @@ set diffopt+=vertical
 " }}}
 
 " latex {{{
-"
-" OPTIONAL: Starting with Vim 7, the filetype of empty .tex files defaults to
-" " 'plaintex' instead of 'tex', which results in vim-latex not being loaded.
-" " The following changes the default filetype back to 'tex':
-let g:tex_flavor='latex'
+" Vim will generally autodetect filetypes automatically.  In most cases this
+" works as expected, however, in some cases it will detect a file with the `tex`
+" suffix as a |plaintex|.  To prevent this, one may set the option
+" g:tex_flavor| in ones `vimrc` file, that is:
+let g:tex_flavor = 'latex'
 
 " truncate the length of the line
-autocmd Filetype tex setlocal textwidth=120
+autocmd Filetype tex setlocal textwidth=79
 autocmd Filetype tex setlocal spell
+autocmd Filetype tex setlocal softtabstop=2 tabstop=2 sw=2
 
-" " for latex-box
-" autocmd Filetype tex setlocal smartindent
-" "
 " for vimtex
-let g:vimtex_latexmk_continuous = 1
+let g:vimtex_latexmk_continuous = 0
 let g:vimtex_latexmk_background = 1
 let g:vimtex_view_general_viewer = 'qpdfview'
 let g:vimtex_view_general_options = '--unique @pdf\#src:@tex:@line:@col'
 let g:vimtex_view_general_options_latexmk = '--unique'
+
+" SuperTab setting to get the \ref{} completing with omnifuc using vimtex
+" plugin
+autocmd FileType tex
+            \ if &omnifunc != '' |
+            \   call SuperTabChain(&omnifunc, "<c-n>") |
+            \   call SuperTabSetDefaultCompletionType("<c-x><c-u>") |
+            \ endif
 " }}}
 "
 " headerguard {{{
@@ -174,3 +166,14 @@ let g:tagbar_left=1
 " To load local vimrc {{{
 set exrc
 "}}}
+"
+" For mutt --{{{
+au BufRead ~/.tmp/mutt-* set tw=72
+"--}}}
+"
+" For neovim --{{{
+if has('nvim')
+	tnoremap <Esc> <C-\><C-n>
+	set clipboard+=unnamedplus
+endif
+" --}}}
