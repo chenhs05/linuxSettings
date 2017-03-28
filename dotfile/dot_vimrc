@@ -26,6 +26,10 @@ Plugin 'majutsushi/tagbar'
 Plugin 'drmikehenry/vim-headerguard'
 Plugin 'parnmatt/vim-root'
 Plugin 'ervandew/supertab'
+Plugin 'vim-airline/vim-airline'
+Plugin 'vim-airline/vim-airline-themes'
+Plugin 'godlygeek/tabular'
+Plugin 'plasticboy/vim-markdown'
 
 " All of your Plugins must be added before the following line
 call vundle#end()            " required
@@ -162,6 +166,23 @@ let g:easytags_async=1
 nmap <F8> :TagbarToggle<CR>
 let g:tagbar_left=1
 " }}}
+"
+" for vim-airline --{{{
+let g:airline#extensions#tabline#enabled = 1
+let g:airline#extensions#tabline#show_tabs = 0
+let g:airline#extensions#tabline#show_splits = 1
+let g:airline#extensions#whitespace#enabled = 0
+let g:airline_powerline_fonts = 0
+" --}}}
+"
+"for vim-markdown --{{{
+	let g:vim_markdown_folding_disabled = 1
+	let g:vim_markdown_toc_autofit = 1
+	let g:tex_conceal = ""
+	let g:vim_markdown_math = 1
+	let g:vim_markdown_frontmatter = 1
+	let g:vim_markdown_no_extensions_in_markdown = 1
+"--}}}
 "
 " To load local vimrc {{{
 set exrc
