@@ -28,8 +28,9 @@ Plugin 'parnmatt/vim-root'
 Plugin 'ervandew/supertab'
 Plugin 'vim-airline/vim-airline'
 Plugin 'vim-airline/vim-airline-themes'
-Plugin 'godlygeek/tabular'
-Plugin 'plasticboy/vim-markdown'
+Plugin 'cespare/vim-toml'
+Plugin 'scrooloose/nerdcommenter'
+Plugin 'loremipsum'
 
 " All of your Plugins must be added before the following line
 call vundle#end()            " required
@@ -85,7 +86,7 @@ if has('gui_running')
 	"let g:solarized_termcolors=256
 else
 	let hour = strftime("%H")
-	if hour >= 6 && hour <= 18
+	if hour >= 6 && hour <= 20
 		set background=light
 	else
 		set background=dark
@@ -115,8 +116,12 @@ endfunction
 autocmd Filetype gitcommit setlocal spell textwidth=72
 " }}}
 "
+" formatting markdown {{{
+autocmd Filetype markdown setlocal spell textwidth=79
+" }}}
+"
 " text files {{{
-autocmd Filetype text setlocal spell textwidth=72
+autocmd Filetype text setlocal spell textwidth=79
 " }}}
 "
 "fugitive {{{
@@ -136,8 +141,6 @@ autocmd Filetype tex setlocal spell
 autocmd Filetype tex setlocal softtabstop=2 tabstop=2 sw=2
 
 " for vimtex
-let g:vimtex_latexmk_continuous = 0
-let g:vimtex_latexmk_background = 1
 let g:vimtex_view_general_viewer = 'qpdfview'
 let g:vimtex_view_general_options = '--unique @pdf\#src:@tex:@line:@col'
 let g:vimtex_view_general_options_latexmk = '--unique'
@@ -171,18 +174,15 @@ let g:tagbar_left=1
 let g:airline#extensions#tabline#enabled = 1
 let g:airline#extensions#tabline#show_tabs = 0
 let g:airline#extensions#tabline#show_splits = 1
+let g:airline#extensions#tabline#buffer_nr_show = 1
+let g:airline#extensions#tabline#exclude_preview = 1
 let g:airline#extensions#whitespace#enabled = 0
 let g:airline_powerline_fonts = 0
 " --}}}
 "
-"for vim-markdown --{{{
-	let g:vim_markdown_folding_disabled = 1
-	let g:vim_markdown_toc_autofit = 1
-	let g:tex_conceal = ""
-	let g:vim_markdown_math = 1
-	let g:vim_markdown_frontmatter = 1
-	let g:vim_markdown_no_extensions_in_markdown = 1
-"--}}}
+" for nerdcommenter {{{
+
+" }}}
 "
 " To load local vimrc {{{
 set exrc
