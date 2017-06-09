@@ -82,7 +82,7 @@ GIT_PS1_SHOWCOLORHINTS=1
 
 function prompt_func() {
 	previous_return_value=$?;
-	prompt="${debian_chroot:+($debian_chroot)}${GREEN}\u${COLOR_NONE}@${GREEN}\h:${LIGHT_BLUE}[${LIGHT_RED}\w${GREEN}\$(__git_ps1)${LIGHT_BLUE}] "
+	prompt="${debian_chroot:+($debian_chroot)}${GREEN}\u${COLOR_NONE}@${LIGHT_RED}\h:${LIGHT_BLUE}${BLUE}\w${GREEN}\$(__git_ps1)${LIGHT_BLUE} "
 	if test $previous_return_value -eq 0
 	then
 		PS1="${prompt}${GREEN}>>${COLOR_NONE} "
@@ -177,12 +177,15 @@ fi
 #####################################################################
 ######## here comes the personal settings
 #####################################################################
-# # load nicer dirctory colors
-# eval `dircolors ~/.dir_colors/dircolors`
 
 ### load the functions for tmux
-if [ -f ~/.tmux_functions ]; then
-	. ~/.tmux_functions
+if [ -f ~/scripts/tmux_functions.bash ]; then
+	. ~/scripts/tmux_functions.bash
+fi
+
+### load other bash functions
+if [ -f ~/scripts/bash_functions.bash ]; then
+	. ~/scripts/bash_functions.bash
 fi
 
 # disable beep sound
@@ -191,9 +194,12 @@ if [[ "$DISPLAY" ]]; then
 	xset b off
 else
 #	echo "setterm -blength 0"
-	setterm -blength 0
+	setterm blength 0
 fi
 
 # alias vim/vi to noevim
 alias vi=nvim
 alias vim=nvim
+
+## for fun
+fortune | cowsay
