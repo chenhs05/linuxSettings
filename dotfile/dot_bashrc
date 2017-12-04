@@ -39,7 +39,7 @@ fi
 # Set this variable in your local shell config if you want remote
 # xterms connecting to this system, to be sent 256 colors.
 # This can be done in /etc/csh.cshrc, or in an earlier profile.d script.
-#   SEND_256_COLORS_TO_REMOTE=1
+   SEND_256_COLORS_TO_REMOTE=1
 
 # Terminals with any of the following set, support 256 colors (and are local)
 local256="$COLORTERM$XTERM_VERSION$ROXTERM_ID$KONSOLE_DBUS_SESSION"
@@ -79,10 +79,11 @@ COLOR_NONE="\001\e[0m\002"
 GIT_PS1_SHOWDIRTYSTATE=1
 GIT_PS1_SHOWUPSTREAM="auto"
 GIT_PS1_SHOWCOLORHINTS=1
+GIT_PS1_SHOWUNTRACKEDFILES=1
 
 function prompt_func() {
 	previous_return_value=$?;
-	prompt="${debian_chroot:+($debian_chroot)}${GREEN}\u${COLOR_NONE}@${LIGHT_RED}\h:${LIGHT_BLUE}${BLUE}\w${GREEN}\$(__git_ps1)${LIGHT_BLUE} "
+	prompt="${debian_chroot:+($debian_chroot)}${GREEN}\u${COLOR_NONE}@${GREEN}\h:${LIGHT_BLUE}${BLUE}\w${GREEN}\$(__git_ps1)${BLUE} "
 	if test $previous_return_value -eq 0
 	then
 		PS1="${prompt}${GREEN}>>${COLOR_NONE} "

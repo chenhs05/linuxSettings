@@ -18,19 +18,30 @@ Plugin 'gmarik/Vundle.vim'
 " Keep Plugin commands between vundle#begin/end.
 Plugin 'tpope/vim-fugitive'
 Plugin 'scrooloose/nerdtree'
+Plugin 'xuyuanp/nerdtree-git-plugin'
+Plugin 'airblade/vim-gitgutter'
 Plugin 'xolox/vim-misc'
 Plugin 'xolox/vim-easytags'
 Plugin 'lervag/vimtex'
-Plugin 'altercation/vim-colors-solarized'
 Plugin 'majutsushi/tagbar'
-Plugin 'drmikehenry/vim-headerguard'
-Plugin 'parnmatt/vim-root'
-Plugin 'ervandew/supertab'
+" Plugin 'ervandew/supertab'
 Plugin 'vim-airline/vim-airline'
 Plugin 'vim-airline/vim-airline-themes'
 Plugin 'cespare/vim-toml'
 Plugin 'scrooloose/nerdcommenter'
-Plugin 'loremipsum'
+Plugin 'godlygeek/tabular'
+Plugin 'plasticboy/vim-markdown'
+
+" "" snips and auto complete
+" neocomplete
+Plugin 'shougo/deoplete.nvim'
+
+" color schemes
+" solarized
+Plugin 'altercation/vim-colors-solarized'
+" others
+Plugin 'morhetz/gruvbox'
+Plugin 'chriskempson/base16-vim'
 
 " All of your Plugins must be added before the following line
 call vundle#end()            " required
@@ -61,6 +72,16 @@ set incsearch
 set omnifunc=syntaxcomplete#Complete
 "personalized status line with more information
 set statusline=%t[%{strlen(&fenc)?&fenc:'none'},%{&ff}]%h%r%y(%n)\ %m%=%c,%l/%L\ %P
+
+" insert date and time
+nnoremap <F3> "=strftime("%Y-%m-%d, %a")<CR>p
+inoremap <F3> <C-R>=strftime("%Y-%m-%d, %a")<CR>
+
+" PageUp PageDown keys
+map <silent> <PageUp> <C-U>
+map <silent> <PageDown> <C-D>
+imap <silent> <PageUp> <C-O><C-U>
+imap <silent> <PageDown> <C-O><C-D>
 "}}}
 
 " ingore some filetype{{{
@@ -68,9 +89,10 @@ set wildignore+=*.o,*.obj,*.swp
 " }}}
 "
 " VHDL Stuff {{{
-au filetype vhdl setlocal foldmethod=marker foldlevel=1 softtabstop=4 tabstop=4 sw=4
-au filetype vhd setlocal foldmethod=marker foldlevel=1 softtabstop=4 tabstop=4 sw=4
-
+" au filetype vhdl setlocal foldmethod=marker foldlevel=1 softtabstop=4 tabstop=4 sw=4
+" au filetype vhd setlocal foldmethod=marker foldlevel=1 softtabstop=4 tabstop=4 sw=4
+au filetype vhdl setlocal foldmethod=marker foldlevel=1
+au filetype vhd setlocal foldmethod=marker foldlevel=1
 " }}}
 "
 " folding {{{
@@ -79,18 +101,19 @@ set foldmethod=syntax
 set foldlevelstart=20
 " }}}
 "
-" solarized {{{
+" colorschemes{{{
 syntax enable
 if has('gui_running')
 	set background=light
 	"let g:solarized_termcolors=256
 else
-	let hour = strftime("%H")
-	if hour >= 6 && hour <= 20
-		set background=light
-	else
-		set background=dark
-	endif
+"	let hour = strftime("%H")
+"	if hour >= 6 && hour <= 20
+"		set background=light
+"	else
+"		set background=dark
+"	endif
+	set background=light
 	"let g:solarized_termcolors=256
 	"set t_Co=16
 endif
@@ -118,6 +141,37 @@ autocmd Filetype gitcommit setlocal spell textwidth=72
 "
 " formatting markdown {{{
 autocmd Filetype markdown setlocal spell textwidth=79
+let g:vim_markdown_math = 1
+let g:vim_markdown_frontmatter = 1
+let g:vim_markdown_new_list_item_indent = 0
+let g:vim_markdown_toc_autofit = 1
+
+" "" function for highlighting for markdwon liquid and mathjax {{{
+" "" http://stsievert.com/blog/2016/01/06/vim-jekyll-mathjax/
+" function! MathAndLiquid()
+"     "" Define certain regions
+"     " Block math. Look for "$$[anything]$$"
+"     syn region math start=/\$\$/ end=/\$\$/
+"     " inline math. Look for "$[not $][anything]$"
+"     syn match math_block '\$[^$].\{-}\$'
+" 
+"     " Liquid single line. Look for "{%[anything]%}"
+"     syn match liquid '{%.*%}'
+"     " Liquid multiline. Look for "{%[anything]%}[anything]{%[anything]%}"
+"     syn region highlight_block start='{% highlight .*%}' end='{%.*%}'
+"     " Fenced code blocks, used in GitHub Flavored Markdown (GFM)
+"     syn region highlight_block start='```' end='```'
+" 
+"     "" Actually highlight those regions.
+"     hi link math Statement
+"     hi link liquid Statement
+"     hi link highlight_block Function
+"     hi link math_block Function
+" endfunction
+" 
+" " Call everytime we open a Markdown file
+" autocmd BufRead,BufNewFile,BufEnter *.md,*.markdown call MathAndLiquid()
+" }}}
 " }}}
 "
 " text files {{{
@@ -127,7 +181,27 @@ autocmd Filetype text setlocal spell textwidth=79
 "fugitive {{{
 set diffopt+=vertical
 " }}}
+"
+"  deoplete{{{
+let g:deoplete#enable_at_startup = 1
+let g:deoplete#auto_complete_delay = 10
+" Use smartcase.
+let g:deoplete#enable_smart_case = 1
+" use head matching but not fuzzy matching 
+call deoplete#custom#source('_', 'matchers', ['matcher_head'])
 
+"use tab for auto completion
+let g:deoplete#disable_auto_complete = 1
+inoremap <silent><expr> <TAB>
+\ pumvisible() ? "\<C-n>" :
+\ <SID>check_back_space() ? "\<TAB>" :
+\ deoplete#mappings#manual_complete()
+function! s:check_back_space() abort "{{{
+let col = col('.') - 1
+return !col || getline('.')[col - 1]  =~ '\s'
+endfunction "}}}
+" }}}
+"
 " latex {{{
 " Vim will generally autodetect filetypes automatically.  In most cases this
 " works as expected, however, in some cases it will detect a file with the `tex`
@@ -144,21 +218,49 @@ autocmd Filetype tex setlocal softtabstop=2 tabstop=2 sw=2
 let g:vimtex_view_general_viewer = 'qpdfview'
 let g:vimtex_view_general_options = '--unique @pdf\#src:@tex:@line:@col'
 let g:vimtex_view_general_options_latexmk = '--unique'
+let g:vimtex_compiler_latexmk = {
+        \ 'backend' : 'nvim',
+        \ 'background' : 1,
+        \ 'build_dir' : '',
+        \ 'callback' : 1,
+        \ 'continuous' : 0,
+        \ 'executable' : 'latexmk',
+        \ 'options' : [
+        \   '-pdf',
+        \   '-verbose',
+        \   '-file-line-error',
+        \   '-synctex=1',
+        \   '-interaction=nonstopmode',
+        \ ],
+        \}
+"" about folding with vimtex
+let g:vimtex_fold_enabled = 1
+" set fillchars="vert:|,fold:\"
+"" close the brace after completion
+let g:vimtex_complete_close_braces = 0
+"" set the width of the index window
+let g:vimtex_index_split_width = 50
+"" not open quickfix windwow when there is only warning
+let g:vimtex_quickfix_open_on_warning = 0
 
-" SuperTab setting to get the \ref{} completing with omnifuc using vimtex
-" plugin
-autocmd FileType tex
-            \ if &omnifunc != '' |
-            \   call SuperTabChain(&omnifunc, "<c-n>") |
-            \   call SuperTabSetDefaultCompletionType("<c-x><c-u>") |
-            \ endif
+" temporaty fix for showing log with neovim
+let g:vimtex_quickfix_latexlog = {'fix_paths':0}
+
+
+if !exists('g:deoplete#omni#input_patterns')
+    let g:deoplete#omni#input_patterns = {}
+endif
+let g:deoplete#omni#input_patterns.tex = g:vimtex#re#deoplete
+
+
+" " SuperTab setting to get the \ref{} completing with omnifuc using vimtex
+" " plugin
+" autocmd FileType tex
+"             \ if &omnifunc != '' |
+"             \   call SuperTabChain(&omnifunc, "<c-n>") |
+"             \   call SuperTabSetDefaultCompletionType("<c-x><c-u>") |
+"             \ endif
 " }}}
-"
-" headerguard {{{
-function! g:HeaderguardName()
-	return "__" . toupper(expand('%:t:gs/[^0-9a-zA-Z_]/_/g'))
-endfunction
-"}}}
 "
 " easy-tags {{{
 " enable async updates
