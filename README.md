@@ -16,8 +16,8 @@ dotfile/
 └── tex.gitignore
 ```
 
-The dot_\* file can be copied to ~/ and change the file name to **.\*** to become active.
+The **dot_\*** file can be copied to **~/** and change the file name to **.\*** to become active.
 
-The **bash_functions.bash** and **dot_tmux_functions** are loaded by the dot_bashrc,
+The **bash_functions.bash** and **dot_tmux_functions** are loaded by the .bashrc,
 they should be put into ~/scripts/ and change to file names of
 **bash_functions.bash** and **tmux_functions.bash**
