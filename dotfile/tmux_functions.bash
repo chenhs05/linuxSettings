@@ -4,7 +4,7 @@
 ## 
 ## to update DISPLAY on all the windows/pane: 
 ## 1. make sure every pane are at terminal, not at vim or something else
-## 2. run "tmux_execute_in_all_panes refresh_tmux"
+## 2. run "execute_in_all_tmux_panes refresh_tmux"
 ## 
 ## the refreence are lost...
 
