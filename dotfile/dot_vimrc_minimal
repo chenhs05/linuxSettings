@@ -1,0 +1,37 @@
+" here start my own .vimrc
+" some basic personal settings {{{
+syntax on
+filetype plugin on
+filetype indent on
+set laststatus=2
+set wildmenu
+set autoread
+set number
+set mouse=a
+set cursorline
+" highlight CursorLine cterm=NONE ctermbg=grey
+set hidden
+" backspace act as in the other program
+set backspace=2
+set hlsearch
+set incsearch
+"}}}
+"
+" ingore some filetype{{{
+set wildignore+=*.o,*.obj,*.swp
+" }}}
+"
+" function: Enable and disable mouse use {{{
+noremap <f12> :call ToggleMouse() <CR>
+function! ToggleMouse()
+if &mouse == 'a'
+	set mouse=
+	set nonumber
+	echo "Mouse usage disabled"
+else
+	set mouse=a
+	set number
+	echo "Mouse usage enabled"
+endif
+endfunction
+" }}}
