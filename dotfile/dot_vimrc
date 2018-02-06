@@ -102,6 +102,8 @@ set foldlevelstart=20
 " }}}
 "
 " colorschemes{{{
+" solarized colorschemes
+" for gnome-terminal: git clone https://github.com/Anthony25/gnome-terminal-colors-solarized.git
 syntax enable
 if has('gui_running')
 	set background=light
@@ -114,7 +116,7 @@ else
 "		set background=dark
 "	endif
 	set background=light
-	let g:solarized_termcolors=256
+	" let g:solarized_termcolors=256
 	"set t_Co=16
 endif
 colorscheme solarized
@@ -184,14 +186,14 @@ set diffopt+=vertical
 "
 "  deoplete{{{
 let g:deoplete#enable_at_startup = 1
-let g:deoplete#auto_complete_delay = 10
+let g:deoplete#auto_complete_delay = 0
 " Use smartcase.
 let g:deoplete#enable_smart_case = 1
 " use head matching but not fuzzy matching 
 call deoplete#custom#source('_', 'matchers', ['matcher_head'])
 
 "use tab for auto completion
-let g:deoplete#disable_auto_complete = 1
+let g:deoplete#disable_auto_complete = 0
 inoremap <silent><expr> <TAB>
 \ pumvisible() ? "\<C-n>" :
 \ <SID>check_back_space() ? "\<TAB>" :
