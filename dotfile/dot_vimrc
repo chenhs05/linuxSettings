@@ -74,8 +74,11 @@ set omnifunc=syntaxcomplete#Complete
 set statusline=%t[%{strlen(&fenc)?&fenc:'none'},%{&ff}]%h%r%y(%n)\ %m%=%c,%l/%L\ %P
 
 " insert date and time
-nnoremap <F3> "=strftime("%Y-%m-%d, %a")<CR>p
+nnoremap <F3> "=strftime("%Y-%m-%d")<CR>p
 inoremap <F3> <C-R>=strftime("%Y-%m-%d, %a")<CR>
+
+"Remove all trailing whitespace by F8
+nnoremap <F8> :let _s=@/<Bar>:%s/\s\+$//e<Bar>:let @/=_s<Bar><CR>
 
 " PageUp PageDown keys
 map <silent> <PageUp> <C-U>
@@ -215,6 +218,7 @@ let g:tex_flavor = 'latex'
 autocmd Filetype tex setlocal textwidth=79
 autocmd Filetype tex setlocal spell
 autocmd Filetype tex setlocal softtabstop=2 tabstop=2 sw=2
+autocmd Filetype tex setlocal breakindent
 
 " for vimtex
 let g:vimtex_view_general_viewer = 'qpdfview'
@@ -225,7 +229,7 @@ let g:vimtex_compiler_latexmk = {
         \ 'background' : 1,
         \ 'build_dir' : '',
         \ 'callback' : 1,
-        \ 'continuous' : 0,
+        \ 'continuous' : 1,
         \ 'executable' : 'latexmk',
         \ 'options' : [
         \   '-pdf',
@@ -244,6 +248,8 @@ let g:vimtex_complete_close_braces = 0
 let g:vimtex_index_split_width = 50
 "" not open quickfix windwow when there is only warning
 let g:vimtex_quickfix_open_on_warning = 0
+"" disable recursive searching for main file
+let g:vimtex_disable_recursive_main_file_detection = 1
 
 " temporaty fix for showing log with neovim
 let g:vimtex_quickfix_latexlog = {'fix_paths':0}
@@ -270,7 +276,7 @@ let g:easytags_async=1
 "}}}
 "
 " tagbar {{{
-nmap <F8> :TagbarToggle<CR>
+nmap <F5> :TagbarToggle<CR>
 let g:tagbar_left=1
 " }}}
 "
