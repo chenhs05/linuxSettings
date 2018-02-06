@@ -5,6 +5,9 @@ endif
 " vim:foldmethod=marker:foldlevel=0
 "
 " plugins (Vundle) {{{
+" install Vundle by :
+"   git clone https://github.com/VundleVim/Vundle.vim.git ~/.vim/bundle/Vundle.vim
+"
 set nocompatible              " be iMproved, required
 filetype off                  " required
 
@@ -39,9 +42,6 @@ Plugin 'shougo/deoplete.nvim'
 " color schemes
 " solarized
 Plugin 'altercation/vim-colors-solarized'
-" others
-Plugin 'morhetz/gruvbox'
-Plugin 'chriskempson/base16-vim'
 
 " All of your Plugins must be added before the following line
 call vundle#end()            " required
@@ -114,7 +114,7 @@ else
 "		set background=dark
 "	endif
 	set background=light
-	"let g:solarized_termcolors=256
+	let g:solarized_termcolors=256
 	"set t_Co=16
 endif
 colorscheme solarized
