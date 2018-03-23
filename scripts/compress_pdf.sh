@@ -22,11 +22,13 @@ out_file=${in_file_base}_compressed.pdf
 
 gs -sDEVICE=pdfwrite -dCompatibilityLevel=1.4 -dPDFSETTINGS=/ebook \
 	-dNOPAUSE -dQUIET -dBATCH -sOutputFile=${path}/${out_file} ${path}/${in_file}
-# -dPDFSETTINGS=/screen lower quality, smaller size.
-# -dPDFSETTINGS=/ebook for better quality, but slightly larger pdfs.
-# -dPDFSETTINGS=/prepress output similar to Acrobat Distiller "Prepress Optimized" setting
-# -dPDFSETTINGS=/printer selects output similar to the Acrobat Distiller "Print Optimized" setting
-# -dPDFSETTINGS=/default selects output intended to be useful across a wide variety of uses, possibly at the expense of a larger output file
+
+## the -dPDFSETTINGS switch:
+# -dPDFSETTINGS=/screen    (lower quality, smaller size. 72 dpi images.)
+# -dPDFSETTINGS=/ebook     (better quality, but slightly larger pdfs. 150 dpi images.)
+# -dPDFSETTINGS=/prepress  (output similar to Acrobat Distiller "Prepress Optimized" setting. 300 dpi images.)
+# -dPDFSETTINGS=/printer   (output similar to the Acrobat Distiller "Print Optimized" setting. color preserving, 300 dpi imgs.)
+# -dPDFSETTINGS=/default   (output intended to be useful across a wide variety of uses, possibly at the expense of a larger output file.)
 
 
 # ## the other parameter, change the image resolution to 150 dpi 
