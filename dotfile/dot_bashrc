@@ -179,14 +179,9 @@ fi
 ######## here comes the personal settings
 #####################################################################
 
-### load the functions for tmux
-if [ -f ~/scripts/tmux_functions.bash ]; then
-	. ~/scripts/tmux_functions.bash
-fi
-
-### load other bash functions
+### load bash and tmux functions
 if [ -f ~/scripts/bash_functions.bash ]; then
-	. ~/scripts/bash_functions.bash
+	. ~/.bash_functions
 fi
 
 # disable beep sound
