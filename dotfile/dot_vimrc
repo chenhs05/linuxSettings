@@ -80,6 +80,10 @@ inoremap <F3> <C-R>=strftime("%Y-%m-%d, %a")<CR>
 "Remove all trailing whitespace by F8
 nnoremap <F8> :let _s=@/<Bar>:%s/\s\+$//e<Bar>:let @/=_s<Bar><CR>
 
+" Disable F1
+map <F1> <Esc>
+imap <F1> <Esc>
+
 " PageUp PageDown keys
 map <silent> <PageUp> <C-U>
 map <silent> <PageDown> <C-D>
@@ -287,7 +291,7 @@ let g:airline#extensions#tabline#show_splits = 1
 let g:airline#extensions#tabline#buffer_nr_show = 1
 let g:airline#extensions#tabline#exclude_preview = 1
 let g:airline#extensions#whitespace#enabled = 0
-let g:airline_powerline_fonts = 0
+let g:airline_powerline_fonts = 1
 " --}}}
 "
 " for nerdcommenter {{{
