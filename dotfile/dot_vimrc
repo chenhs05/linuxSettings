@@ -20,6 +20,7 @@ Plugin 'gmarik/Vundle.vim'
 
 " Keep Plugin commands between vundle#begin/end.
 Plugin 'tpope/vim-fugitive'
+Plugin 'tpope/vim-surround'
 Plugin 'scrooloose/nerdtree'
 Plugin 'xuyuanp/nerdtree-git-plugin'
 Plugin 'airblade/vim-gitgutter'
@@ -30,14 +31,20 @@ Plugin 'majutsushi/tagbar'
 " Plugin 'ervandew/supertab'
 Plugin 'vim-airline/vim-airline'
 Plugin 'vim-airline/vim-airline-themes'
-Plugin 'cespare/vim-toml'
-Plugin 'scrooloose/nerdcommenter'
 Plugin 'godlygeek/tabular'
 Plugin 'plasticboy/vim-markdown'
 
 " "" snips and auto complete
 " neocomplete
 Plugin 'shougo/deoplete.nvim'
+" auto complete words
+Plugin 'ujihisa/neco-look'
+
+" Tex line break
+Plugin 'junegunn/goyo.vim'
+
+" vimwiki
+Plugin 'vimwiki/vimwiki'
 
 " color schemes
 " solarized
@@ -85,10 +92,14 @@ map <F1> <Esc>
 imap <F1> <Esc>
 
 " PageUp PageDown keys
-map <silent> <PageUp> <C-U>
-map <silent> <PageDown> <C-D>
-imap <silent> <PageUp> <C-O><C-U>
-imap <silent> <PageDown> <C-O><C-D>
+" map <silent> <PageUp> 1000<C-U>
+" map <silent> <PageDown> 1000<C-D>
+" imap <silent> <PageUp> <C-O>1000<C-U>
+" imap <silent> <PageDown> <C-O>1000<C-D>
+map <silent> <PageUp> <Nop>
+map <silent> <PageDown> <Nop>
+imap <silent> <PageUp> <Nop>
+imap <silent> <PageDown> <Nop>
 "}}}
 
 " ingore some filetype{{{
@@ -150,6 +161,7 @@ autocmd Filetype gitcommit setlocal spell textwidth=72
 "
 " formatting markdown {{{
 autocmd Filetype markdown setlocal spell textwidth=79
+autocmd Filetype markdown setlocal expandtab softtabstop=2 tabstop=2 shiftwidth=2
 let g:vim_markdown_math = 1
 let g:vim_markdown_frontmatter = 1
 let g:vim_markdown_new_list_item_indent = 0
@@ -163,21 +175,21 @@ let g:vim_markdown_toc_autofit = 1
 "     syn region math start=/\$\$/ end=/\$\$/
 "     " inline math. Look for "$[not $][anything]$"
 "     syn match math_block '\$[^$].\{-}\$'
-" 
+"
 "     " Liquid single line. Look for "{%[anything]%}"
 "     syn match liquid '{%.*%}'
 "     " Liquid multiline. Look for "{%[anything]%}[anything]{%[anything]%}"
 "     syn region highlight_block start='{% highlight .*%}' end='{%.*%}'
 "     " Fenced code blocks, used in GitHub Flavored Markdown (GFM)
 "     syn region highlight_block start='```' end='```'
-" 
+"
 "     "" Actually highlight those regions.
 "     hi link math Statement
 "     hi link liquid Statement
 "     hi link highlight_block Function
 "     hi link math_block Function
 " endfunction
-" 
+"
 " " Call everytime we open a Markdown file
 " autocmd BufRead,BufNewFile,BufEnter *.md,*.markdown call MathAndLiquid()
 " }}}
@@ -189,26 +201,6 @@ autocmd Filetype text setlocal spell textwidth=79
 "
 "fugitive {{{
 set diffopt+=vertical
-" }}}
-"
-"  deoplete{{{
-let g:deoplete#enable_at_startup = 1
-let g:deoplete#auto_complete_delay = 0
-" Use smartcase.
-let g:deoplete#enable_smart_case = 1
-" use head matching but not fuzzy matching 
-call deoplete#custom#source('_', 'matchers', ['matcher_head'])
-
-"use tab for auto completion
-let g:deoplete#disable_auto_complete = 0
-inoremap <silent><expr> <TAB>
-\ pumvisible() ? "\<C-n>" :
-\ <SID>check_back_space() ? "\<TAB>" :
-\ deoplete#mappings#manual_complete()
-function! s:check_back_space() abort "{{{
-let col = col('.') - 1
-return !col || getline('.')[col - 1]  =~ '\s'
-endfunction "}}}
 " }}}
 "
 " latex {{{
@@ -224,6 +216,17 @@ autocmd Filetype tex setlocal spell
 autocmd Filetype tex setlocal softtabstop=2 tabstop=2 sw=2
 autocmd Filetype tex setlocal breakindent
 
+" to format the tex such that vim insert a line break afte each sentence
+function! AddSentenceMaps()
+  imap .<Space> .<CR>
+  imap !<Space> !<CR>
+  imap ?<Space> ?<CR>
+
+  " format the who paragraph to have one sentence per line
+  " used in the normal mode
+  "exec "nmap gq vipJ:s/\\([.!?]\\)\\s\\+/\\1\\r/g<CR>"
+endfunction
+autocmd Filetype tex call AddSentenceMaps()
 " for vimtex
 let g:vimtex_view_general_viewer = 'qpdfview'
 let g:vimtex_view_general_options = '--unique @pdf\#src:@tex:@line:@col'
@@ -247,16 +250,13 @@ let g:vimtex_compiler_latexmk = {
 let g:vimtex_fold_enabled = 1
 " set fillchars="vert:|,fold:\"
 "" close the brace after completion
-let g:vimtex_complete_close_braces = 0
+let g:vimtex_complete_close_braces = 1
 "" set the width of the index window
 let g:vimtex_index_split_width = 50
 "" not open quickfix windwow when there is only warning
 let g:vimtex_quickfix_open_on_warning = 0
 "" disable recursive searching for main file
 let g:vimtex_disable_recursive_main_file_detection = 1
-
-" temporaty fix for showing log with neovim
-let g:vimtex_quickfix_latexlog = {'fix_paths':0}
 
 
 if !exists('g:deoplete#omni#input_patterns')
@@ -281,7 +281,7 @@ let g:easytags_async=1
 "
 " tagbar {{{
 nmap <F5> :TagbarToggle<CR>
-let g:tagbar_left=1
+" let g:tagbar_left=1
 " }}}
 "
 " for vim-airline --{{{
@@ -294,21 +294,71 @@ let g:airline#extensions#whitespace#enabled = 0
 let g:airline_powerline_fonts = 1
 " --}}}
 "
+" for Goyo {{{
+    function! s:goyo_enter()
+	    set linebreak
+    endfunction
+
+    function! s:goyo_leave()
+	    set nolinebreak
+    endfunction
+
+    autocmd! User GoyoEnter nested call <SID>goyo_enter()
+    autocmd! User GoyoLeave nested call <SID>goyo_leave()
+" }}}
+"
 " for nerdcommenter {{{
 
 " }}}
 "
 " To load local vimrc {{{
 set exrc
+set secure
 "}}}
 "
 " For mutt --{{{
 au BufRead ~/.tmp/mutt-* set tw=72
 "--}}}
 "
-" For neovim --{{{
+" For gitgutter {{{
+set updatetime=1000
+" }}}
+"
+" For Vimwiki {{{
+" use markdown syntax for Vimwiki
+let g:vimwiki_list = [{'path': '~/vimwiki/',
+			\ 'syntax': 'markdown', 'ext': '.md'}]
+
+" disable the table mapping for INSERT mode
+let g:vimwiki_table_mappings=0
+
+" go to the director where the wiki pages are
+let g:vimwiki_auto_chdir=1
+"}}}
+"
+" For neovim only configurations--{{{
 if has('nvim')
 	tnoremap <Esc> <C-\><C-n>
 	set clipboard+=unnamedplus
+
+	"  deoplete{{{
+	let g:deoplete#enable_at_startup = 1
+	let g:deoplete#auto_complete_delay = 0
+	" Use smartcase.
+	let g:deoplete#enable_smart_case = 1
+	" use head matching but not fuzzy matching
+	call deoplete#custom#source('_', 'matchers', ['matcher_head'])
+
+	"use tab for auto completion
+	let g:deoplete#disable_auto_complete = 0
+	inoremap <silent><expr> <TAB>
+				\ pumvisible() ? "\<C-n>" :
+				\ <SID>check_back_space() ? "\<TAB>" :
+				\ deoplete#mappings#manual_complete()
+	function! s:check_back_space() abort
+		let col = col('.') - 1
+		return !col || getline('.')[col - 1]  =~ '\s'
+	endfunction
+	" }}}
 endif
 " --}}}
