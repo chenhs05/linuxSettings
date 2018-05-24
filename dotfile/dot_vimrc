@@ -33,8 +33,9 @@ Plugin 'vim-airline/vim-airline'
 Plugin 'vim-airline/vim-airline-themes'
 Plugin 'godlygeek/tabular'
 Plugin 'plasticboy/vim-markdown'
+Plugin 'mzlogin/vim-markdown-toc'
 
-" "" snips and auto complete
+" snips and auto complete
 " neocomplete
 Plugin 'shougo/deoplete.nvim'
 " auto complete words
@@ -42,7 +43,7 @@ Plugin 'ujihisa/neco-look'
 
 " Tex line break
 Plugin 'junegunn/goyo.vim'
-
+Plugin 'junegunn/limelight.vim'
 " vimwiki
 Plugin 'vimwiki/vimwiki'
 
@@ -74,9 +75,6 @@ set backspace=2
 set hlsearch
 set incsearch
 
-"use omnicomplete whenever there's no completion engine in youcompleteme (for
-"example, in the case of PHP)
-set omnifunc=syntaxcomplete#Complete
 "personalized status line with more information
 set statusline=%t[%{strlen(&fenc)?&fenc:'none'},%{&ff}]%h%r%y(%n)\ %m%=%c,%l/%L\ %P
 
@@ -100,25 +98,37 @@ map <silent> <PageUp> <Nop>
 map <silent> <PageDown> <Nop>
 imap <silent> <PageUp> <Nop>
 imap <silent> <PageDown> <Nop>
+
+" a key to keep the cursor centered vertically on the screen
+function! ToggleVCenterCursor()
+if &scrolloff == 999
+	set scrolloff=0
+	echo "Vertically centering cursor disabled"
+else
+	set scrolloff=999
+	echo "Vertically centering cursor enabled"
+endif
+endfunction
+nnoremap <Leader>zz :call ToggleVCenterCursor() <CR>
 "}}}
 
 " ingore some filetype{{{
 set wildignore+=*.o,*.obj,*.swp
 " }}}
-"
+
 " VHDL Stuff {{{
 " au filetype vhdl setlocal foldmethod=marker foldlevel=1 softtabstop=4 tabstop=4 sw=4
 " au filetype vhd setlocal foldmethod=marker foldlevel=1 softtabstop=4 tabstop=4 sw=4
 au filetype vhdl setlocal foldmethod=marker foldlevel=1
 au filetype vhd setlocal foldmethod=marker foldlevel=1
 " }}}
-"
+
 " folding {{{
 syn sync fromstart
 set foldmethod=syntax
 set foldlevelstart=20
 " }}}
-"
+
 " colorschemes{{{
 " solarized colorschemes
 " for gnome-terminal: git clone https://github.com/Anthony25/gnome-terminal-colors-solarized.git
@@ -139,7 +149,7 @@ else
 endif
 colorscheme solarized
 " }}}
-"
+
 " function: Enable and disable mouse use {{{
 noremap <f12> :call ToggleMouse() <CR>
 function! ToggleMouse()
@@ -154,55 +164,34 @@ else
 endif
 endfunction
 " }}}
-"
+
 " git commit message {{{
 autocmd Filetype gitcommit setlocal spell textwidth=72
 " }}}
-"
+
 " formatting markdown {{{
 autocmd Filetype markdown setlocal spell textwidth=79
 autocmd Filetype markdown setlocal expandtab softtabstop=2 tabstop=2 shiftwidth=2
+autocmd Filetype markdown setlocal conceallevel=2
+
+" for plasticboy/vim-markdown
 let g:vim_markdown_math = 1
 let g:vim_markdown_frontmatter = 1
 let g:vim_markdown_new_list_item_indent = 0
 let g:vim_markdown_toc_autofit = 1
 
-" "" function for highlighting for markdwon liquid and mathjax {{{
-" "" http://stsievert.com/blog/2016/01/06/vim-jekyll-mathjax/
-" function! MathAndLiquid()
-"     "" Define certain regions
-"     " Block math. Look for "$$[anything]$$"
-"     syn region math start=/\$\$/ end=/\$\$/
-"     " inline math. Look for "$[not $][anything]$"
-"     syn match math_block '\$[^$].\{-}\$'
-"
-"     " Liquid single line. Look for "{%[anything]%}"
-"     syn match liquid '{%.*%}'
-"     " Liquid multiline. Look for "{%[anything]%}[anything]{%[anything]%}"
-"     syn region highlight_block start='{% highlight .*%}' end='{%.*%}'
-"     " Fenced code blocks, used in GitHub Flavored Markdown (GFM)
-"     syn region highlight_block start='```' end='```'
-"
-"     "" Actually highlight those regions.
-"     hi link math Statement
-"     hi link liquid Statement
-"     hi link highlight_block Function
-"     hi link math_block Function
-" endfunction
-"
-" " Call everytime we open a Markdown file
-" autocmd BufRead,BufNewFile,BufEnter *.md,*.markdown call MathAndLiquid()
+" for vim-markdown-toc
+let g:vmt_cycle_list_item_markers = 1
 " }}}
-" }}}
-"
+
 " text files {{{
 autocmd Filetype text setlocal spell textwidth=79
 " }}}
-"
+
 "fugitive {{{
 set diffopt+=vertical
 " }}}
-"
+
 " latex {{{
 " Vim will generally autodetect filetypes automatically.  In most cases this
 " works as expected, however, in some cases it will detect a file with the `tex`
@@ -258,7 +247,6 @@ let g:vimtex_quickfix_open_on_warning = 0
 "" disable recursive searching for main file
 let g:vimtex_disable_recursive_main_file_detection = 1
 
-
 if !exists('g:deoplete#omni#input_patterns')
     let g:deoplete#omni#input_patterns = {}
 endif
@@ -273,17 +261,17 @@ let g:deoplete#omni#input_patterns.tex = g:vimtex#re#deoplete
 "             \   call SuperTabSetDefaultCompletionType("<c-x><c-u>") |
 "             \ endif
 " }}}
-"
+
 " easy-tags {{{
 " enable async updates
 let g:easytags_async=1
 "}}}
-"
+
 " tagbar {{{
 nmap <F5> :TagbarToggle<CR>
 " let g:tagbar_left=1
 " }}}
-"
+
 " for vim-airline --{{{
 let g:airline#extensions#tabline#enabled = 1
 let g:airline#extensions#tabline#show_tabs = 0
@@ -293,8 +281,9 @@ let g:airline#extensions#tabline#exclude_preview = 1
 let g:airline#extensions#whitespace#enabled = 0
 let g:airline_powerline_fonts = 1
 " --}}}
-"
-" for Goyo {{{
+
+" for Goyo and Limelight{{{
+let g:limelight_conceal_ctermfg = 'gray'
     function! s:goyo_enter()
 	    set linebreak
     endfunction
@@ -306,36 +295,39 @@ let g:airline_powerline_fonts = 1
     autocmd! User GoyoEnter nested call <SID>goyo_enter()
     autocmd! User GoyoLeave nested call <SID>goyo_leave()
 " }}}
-"
+
 " for nerdcommenter {{{
 
 " }}}
-"
+
 " To load local vimrc {{{
 set exrc
 set secure
 "}}}
-"
+
 " For mutt --{{{
 au BufRead ~/.tmp/mutt-* set tw=72
 "--}}}
-"
+
 " For gitgutter {{{
 set updatetime=1000
 " }}}
-"
+
 " For Vimwiki {{{
 " use markdown syntax for Vimwiki
-let g:vimwiki_list = [{'path': '~/vimwiki/',
-			\ 'syntax': 'markdown', 'ext': '.md'}]
+let g:vimwiki_list = [{
+			\ 'path': '~/vimwiki/',
+			\ 'syntax': 'markdown',
+			\ 'ext': '.md'
+			\ }]
 
-" disable the table mapping for INSERT mode
-let g:vimwiki_table_mappings=0
+" only set filetype to vimwiki for the .md files in the wiki directory
+let g:vimwiki_global_ext = 0
 
 " go to the director where the wiki pages are
 let g:vimwiki_auto_chdir=1
 "}}}
-"
+
 " For neovim only configurations--{{{
 if has('nvim')
 	tnoremap <Esc> <C-\><C-n>
