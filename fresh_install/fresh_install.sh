@@ -4,6 +4,8 @@
 sudo apt install vim neovim tmux git git-gui gitk dconf-cli
 sudo apt install bash-completion exuberant-ctags
 sudo apt install python3 python3-pip
+# for Chinese fonts
+sudo apt install fonts-wqy-microhei fonts-wqy-zenhei xfonts-wqy
 
 ### show user name in the lightdm greeter
 echo "Enable the user in the lightdm greeter..."
