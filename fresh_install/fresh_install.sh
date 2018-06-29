@@ -12,6 +12,11 @@ echo "Enable the user in the lightdm greeter..."
 sudo cp config_files/02_enable_users.conf /usr/share/lightdm/lightdm.conf.d/
 echo "Done."
 
+### change the swapiness to 10, which is recommended for linux desktop
+echo "Changing the system swapiness..."
+sudo cp config_files/90-swapiness.conf /etc/sysctl.d/
+echo "Done."
+
 ### apply the dot files
 echo "Applying the dot files..."
 cp ../dotfile/dot_bashrc ~/.bashrc
