@@ -4,10 +4,17 @@
 sudo apt install vim neovim tmux git git-gui gitk dconf-cli
 sudo apt install bash-completion exuberant-ctags
 sudo apt install python3 python3-pip
+# for Chinese fonts
+sudo apt install fonts-wqy-microhei fonts-wqy-zenhei xfonts-wqy
 
 ### show user name in the lightdm greeter
 echo "Enable the user in the lightdm greeter..."
 sudo cp config_files/02_enable_users.conf /usr/share/lightdm/lightdm.conf.d/
+echo "Done."
+
+### change the swapiness to 10, which is recommended for linux desktop
+echo "Changing the system swapiness..."
+sudo cp config_files/90-swapiness.conf /etc/sysctl.d/
 echo "Done."
 
 ### Set PulseAudio per-application control
@@ -21,7 +28,6 @@ fi
 cp config_files/pulse/daemon.conf $configDir
 unset configDir
 echo "Done."
-
 
 ### apply the dot files
 echo "Applying the dot files..."
