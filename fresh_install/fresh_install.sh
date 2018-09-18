@@ -10,6 +10,19 @@ echo "Enable the user in the lightdm greeter..."
 sudo cp config_files/02_enable_users.conf /usr/share/lightdm/lightdm.conf.d/
 echo "Done."
 
+### Set PulseAudio per-application control
+echo "Set PulseAudio for per-application control..."
+configDir=~/.config/pulse/
+if [ ! -d $configDir ]; then
+	echo "PulseAudio user configuration folder does not exist."
+	echo "Create PulseAudio configuration folder..."
+	mkdir -p $configDir
+fi
+cp config_files/pulse/daemon.conf $configDir
+unset configDir
+echo "Done."
+
+
 ### apply the dot files
 echo "Applying the dot files..."
 cp ../dotfile/dot_bashrc ~/.bashrc
