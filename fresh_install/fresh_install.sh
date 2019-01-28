@@ -49,10 +49,23 @@ source ~/.vimrc" > ~/.config/nvim/init.vim
 	echo "Done."
 fi
 
-### install menlo fonts
-for f in ~/.local/share/fonts/Menlo* ~/.local/share/fonts/Inconsolata*; do
+### install fonts
+#### for Menlo fonts
+for f in ~/.local/share/fonts/Menlo*; do
 	if [ ! -e $f ]; then
-		echo "Install Menlo and Inconsolata fonts..."
+		echo "Install fonts..."
+		pushd .
+		cd fonts/
+		./install.sh
+		popd
+		echo "Done."
+	fi
+	break
+done
+#### for Inconsolata fonts
+for f in ~/.local/share/fonts/Inconsolata*; do
+	if [ ! -e $f ]; then
+		echo "Install fonts..."
 		pushd .
 		cd fonts/
 		./install.sh
