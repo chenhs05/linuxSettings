@@ -32,7 +32,7 @@ echo "Done."
 ### apply the dot files
 echo "Applying the dot files..."
 cp ../dotfile/dot_bashrc ~/.bashrc
-cp ../dotfile/dot_vimrc ~/.vimrc
+ln -s $PWD/../dotfile/dot_vimrc ~/.vimrc
 cp ../dotfile/dot_tmux.conf ~/.tmux.conf
 cp ../dotfile/dot_screenrc ~/.screenrc
 cp ../dotfile/dot_bash_functions ~/.bash_functions
@@ -50,11 +50,11 @@ source ~/.vimrc" > ~/.config/nvim/init.vim
 fi
 
 ### install menlo fonts
-for f in ~/.local/share/fonts/Menlo_*; do
+for f in ~/.local/share/fonts/Menlo* ~/.local/share/fonts/Inconsolata*; do
 	if [ ! -e $f ]; then
-		echo "Install Menlo fonts..."
+		echo "Install Menlo and Inconsolata fonts..."
 		pushd .
-		cd fonts_menlo/
+		cd fonts/
 		./install.sh
 		popd
 		echo "Done."
@@ -69,6 +69,9 @@ if [ ! -e ~/.vim/bundle/Vundle.vim ]; then
 	git clone https://github.com/VundleVim/Vundle.vim.git ~/.vim/bundle/Vundle.vim
 	echo "Done."
 fi
+
+### install Plugins
+vim -c "PluginInstall" -c "qa"
 
 ### setup nvim
 sudo pip3 install neovim

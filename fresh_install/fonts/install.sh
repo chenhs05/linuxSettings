@@ -12,7 +12,8 @@ fi
 
 # Copy all fonts to user fonts directory
 echo "Copying fonts..."
-cp Menlo* $font_dir/
+cp -r Menlo/ $font_dir/
+cp -r Inconsolata/ $font_dir/
 
 # Reset font cache on Linux
 if which fc-cache >/dev/null 2>&1 ; then
