@@ -32,22 +32,12 @@ echo "Done."
 ### apply the dot files
 echo "Applying the dot files..."
 cp ../dotfile/dot_bashrc ~/.bashrc
-ln -s $PWD/../dotfile/dot_vimrc ~/.vimrc
+ln -fs $PWD/../dotfile/dot_vimrc ~/.vimrc
 cp ../dotfile/dot_tmux.conf ~/.tmux.conf
 cp ../dotfile/dot_screenrc ~/.screenrc
 cp ../dotfile/dot_bash_functions ~/.bash_functions
 source ~/.bashrc
 echo "Done."
-
-### create configuration for nvim
-if [ ! -f ~/.config/nvim/init.vim ]; then
-	echo "Create Nvim configurations..."
-	mkdir -p ~/.config/nvim
-	echo "set runtimepath^=~/.vim runtimepath+=~/.vim/after
-let &packpath = &runtimepath
-source ~/.vimrc" > ~/.config/nvim/init.vim
-	echo "Done."
-fi
 
 ### install fonts
 #### for Menlo fonts
@@ -75,6 +65,16 @@ for f in ~/.local/share/fonts/Inconsolata*; do
 	break
 done
 
+### create configuration for nvim
+if [ ! -f ~/.config/nvim/init.vim ]; then
+	echo "Create Nvim configurations..."
+	mkdir -p ~/.config/nvim
+	echo "set runtimepath^=~/.vim runtimepath+=~/.vim/after
+let &packpath = &runtimepath
+source ~/.vimrc" > ~/.config/nvim/init.vim
+	echo "Done."
+fi
+
 ### install Vundle plugin for organizing Vim Plugins
 if [ ! -e ~/.vim/bundle/Vundle.vim ]; then
 	echo "Install Vim Vundle..."
@@ -83,10 +83,7 @@ if [ ! -e ~/.vim/bundle/Vundle.vim ]; then
 	echo "Done."
 fi
 
-### install Plugins
-vim -c "PluginInstall" -c "qa"
-
-### setup nvim
+### setup nvim and install plugins
 sudo pip3 install neovim
 nvim +PluginInstall +UpdateRemotePlugins +qall
 
