@@ -30,12 +30,15 @@ unset configDir
 echo "Done."
 
 ### apply the dot files
-echo "Applying the dot files..."
-cp ../dotfile/dot_bashrc ~/.bashrc
+echo "Backup bashrc and vimrc..."
+if [ -f ~/.bashrc ]; then cp ~/.bashrc ~/bashrc_backup; fi
+if [ -f ~/.vimrc ]; then cp ~/.vimrc ~/vimrc_backup; fi
+echo "Creating symbolic links for the dot files..."
+ln -fs $PWD/../dotfile/dot_bashrc ~/.bashrc
 ln -fs $PWD/../dotfile/dot_vimrc ~/.vimrc
-cp ../dotfile/dot_tmux.conf ~/.tmux.conf
-cp ../dotfile/dot_screenrc ~/.screenrc
-cp ../dotfile/dot_bash_functions ~/.bash_functions
+ln -fs $PWD/../dotfile/dot_tmux.conf ~/.tmux.conf
+ln -fs $PWD/../dotfile/dot_screenrc ~/.screenrc
+ln -fs $PWD/../dotfile/dot_bash_functions ~/.bash_functions
 source ~/.bashrc
 echo "Done."
 
