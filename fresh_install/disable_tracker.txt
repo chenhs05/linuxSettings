@@ -13,3 +13,20 @@ Paste the following into the file, save and exit
       Encoding=UTF-8
       Name=Tracker
       Hidden=true
+
+#####################
+2019-01-25, Fri
+The file names/application names have been changed,
+
+Here is the a method based on the same idea ( modified from
+https://gist.github.com/vancluever/d34b41eb77e6d077887c )
+
+```bash
+
+tracker daemon -t
+cd ~/.config/autostart
+cp -v /etc/xdg/autostart/tracker-* ./
+for FILE in `ls tracker-*`; do echo Hidden=true >> $FILE; done
+rm -rf ~/.cache/tracker ~/.local/share/tracker<Paste>
+
+```
