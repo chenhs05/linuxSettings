@@ -170,3 +170,11 @@ else
 	}
 fi
 
+
+##########################
+## Turn off the screen  ##
+##########################
+function turnOffScreen ()
+{
+	sleep 1; xset dpms force off
+}
