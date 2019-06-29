@@ -80,7 +80,7 @@ set hidden
 set backspace=2
 set hlsearch
 set incsearch
-set spelllang=en,de
+set spelllang=en
 
 "personalized status line with more information
 set statusline=%t[%{strlen(&fenc)?&fenc:'none'},%{&ff}]%h%r%y(%n)\ %m%=%c,%l/%L\ %P
