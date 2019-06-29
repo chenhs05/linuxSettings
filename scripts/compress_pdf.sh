@@ -16,6 +16,7 @@
 
 in_file=$1
 path=${in_file%/*}
+if [ $path == $in_file ]; then path=.; fi # to work with in_file name without path
 in_file=${in_file##*/} # to get the file name if it's not on the same folder as the scripts
 in_file_base=${in_file%%.*}
 out_file=${in_file_base}_compressed.pdf
@@ -34,3 +35,6 @@ gs -sDEVICE=pdfwrite -dCompatibilityLevel=1.4 -dPDFSETTINGS=/ebook \
 # ## the other parameter, change the image resolution to 150 dpi 
 # gs -sDEVICE=pdfwrite -dCompatibilityLevel=1.4 -dDownsampleColorImages=true \
 # 	-dColorImageResolution=150 -dNOPAUSE  -dBATCH -sOutputFile=${path}${out_file} ${path}${in_file}
+
+# to remove the title exif
+exiftool -Title="" -overwrite_original ${path}/${out_file}
