@@ -117,6 +117,8 @@ else
 endif
 endfunction
 nnoremap <Leader>zz :call ToggleVCenterCursor() <CR>
+
+map <F9> :NERDTreeToggle<CR>
 "}}}
 
 " folding {{{
@@ -192,7 +194,7 @@ autocmd Filetype gitcommit setlocal spell textwidth=72
 " formatting markdown {{{
 autocmd Filetype markdown setlocal spell textwidth=79
 autocmd Filetype markdown setlocal expandtab softtabstop=2 tabstop=2 shiftwidth=2
-autocmd Filetype markdown setlocal conceallevel=2
+autocmd Filetype markdown setlocal conceallevel=1
 
 " for plasticboy/vim-markdown
 let g:vim_markdown_math = 1
@@ -266,6 +268,7 @@ if has('nvim')
 				\ 'continuous' : 1,
 				\ 'executable' : 'latexmk',
 				\ 'options' : [
+				\   '-pdf',
 				\   '-verbose',
 				\   '-file-line-error',
 				\   '-synctex=1',
@@ -366,6 +369,7 @@ let g:vimwiki_auto_chdir=1
 "}}}
 
 " For indentline {{{
+let g:indentLine_enabled = 0
 let g:indentLine_char = '┊'
 "}}}
 
