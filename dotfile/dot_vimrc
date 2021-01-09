@@ -34,16 +34,22 @@ Plugin 'godlygeek/tabular'
 Plugin 'plasticboy/vim-markdown'
 Plugin 'mzlogin/vim-markdown-toc'
 Plugin 'yggdroot/indentline'
+Plugin 'Konfekt/FastFold'
+Plugin 'machakann/vim-highlightedyank'
 
 " snips and auto complete
 " neocomplete
 Plugin 'shougo/deoplete.nvim'
 " auto complete words
 Plugin 'ujihisa/neco-look'
+" snippets
+Plugin 'Shougo/neosnippet.vim'
+Plugin 'Shougo/neosnippet-snippets'
 
 " Tex line break
 Plugin 'junegunn/goyo.vim'
 Plugin 'junegunn/limelight.vim'
+Plugin 'reedes/vim-pencil'
 
 " vimwiki
 Plugin 'mattn/calendar-vim'
@@ -52,6 +58,7 @@ Plugin 'vimwiki/vimwiki'
 " color schemes
 " solarized
 Plugin 'altercation/vim-colors-solarized'
+Plugin 'NLKNguyen/papercolor-theme'
 
 " VHDL or Verilog
 Plugin 'vhda/verilog_systemverilog.vim'
@@ -122,7 +129,7 @@ map <F9> :NERDTreeToggle<CR>
 "}}}
 
 " folding {{{
-syn sync fromstart
+" syn sync fromstart
 set foldmethod=syntax
 set foldlevelstart=20
 " }}}
@@ -146,6 +153,7 @@ else
 	"set t_Co=16
 endif
 colorscheme solarized
+"colorscheme PaperColor
 " }}}
 
 " function: Enable and disable mouse use {{{
@@ -194,13 +202,14 @@ autocmd Filetype gitcommit setlocal spell textwidth=72
 " formatting markdown {{{
 autocmd Filetype markdown setlocal spell textwidth=79
 autocmd Filetype markdown setlocal expandtab softtabstop=2 tabstop=2 shiftwidth=2
-autocmd Filetype markdown setlocal conceallevel=1
+autocmd Filetype markdown setlocal conceallevel=2
 
 " for plasticboy/vim-markdown
 let g:vim_markdown_math = 1
 let g:vim_markdown_frontmatter = 1
 let g:vim_markdown_new_list_item_indent = 0
 let g:vim_markdown_toc_autofit = 1
+let g:vim_markdown_folding_disabled = 1
 
 " for vim-markdown-toc
 let g:vmt_cycle_list_item_markers = 1
@@ -227,7 +236,7 @@ set diffopt+=vertical
 let g:tex_flavor = 'latex'
 
 " truncate the length of the line
-autocmd Filetype tex setlocal textwidth=79
+"autocmd Filetype tex setlocal textwidth=79
 autocmd Filetype tex setlocal spell
 autocmd Filetype tex setlocal softtabstop=2 tabstop=2 sw=2
 autocmd Filetype tex setlocal breakindent
@@ -334,6 +343,18 @@ let g:goyo_linenr = 1
     autocmd! User GoyoLeave nested call <SID>goyo_leave()
 " }}}
 
+" for pencil {{{
+" autoformat for markdown and no autoformat for text
+augroup pencil
+  autocmd!
+  autocmd FileType markdown call pencil#init({'wrap': 'hard', 'autoformat': 0})
+  autocmd FileType text     call pencil#init({'wrap': 'hard', 'autoformat': 0})
+augroup END
+
+" modifier key for suspending autoformat
+let g:pencil#map#suspend_af = 'K'   " default is no mapping
+" }}}
+
 " for nerdcommenter {{{
 
 " }}}
@@ -373,25 +394,47 @@ let g:indentLine_enabled = 0
 let g:indentLine_char = '┊'
 "}}}
 
+" For neosnippet {{{
+" Plugin key-mappings.
+" Note: It must be "imap" and "smap".  It uses <Plug> mappings.
+imap <C-k>     <Plug>(neosnippet_expand_or_jump)
+smap <C-k>     <Plug>(neosnippet_expand_or_jump)
+xmap <C-k>     <Plug>(neosnippet_expand_target)
+
+" SuperTab like snippets behavior.
+" Note: It must be "imap" and "smap".  It uses <Plug> mappings.
+"imap <expr><TAB>
+" \ pumvisible() ? "\<C-n>" :
+" \ neosnippet#expandable_or_jumpable() ?
+" \    "\<Plug>(neosnippet_expand_or_jump)" : "\<TAB>"
+smap <expr><TAB> neosnippet#expandable_or_jumpable() ?
+\ "\<Plug>(neosnippet_expand_or_jump)" : "\<TAB>"
+
+" For conceal markers.
+if has('conceal')
+  set conceallevel=2 concealcursor=nc
+endif
+" }}}
+
 " For neovim only configurations--{{{
 if has('nvim')
 	tnoremap <Esc> <C-\><C-n>
 	set clipboard+=unnamedplus
+	set inccommand=nosplit
 
 	"  deoplete{{{
 	let g:deoplete#enable_at_startup = 1
-	let g:deoplete#auto_complete_delay = 0
-	" Use smartcase.
-	let g:deoplete#enable_smart_case = 1
+	call deoplete#custom#option( {
+				\ 'smart_case': v:true,
+				\ })
 	" use head matching but not fuzzy matching
 	call deoplete#custom#source('_', 'matchers', ['matcher_head'])
 
 	"use tab for auto completion
-	let g:deoplete#disable_auto_complete = 0
 	inoremap <silent><expr> <TAB>
 				\ pumvisible() ? "\<C-n>" :
 				\ <SID>check_back_space() ? "\<TAB>" :
-				\ deoplete#mappings#manual_complete()
+				\ deoplete#manual_complete()
 	function! s:check_back_space() abort
 		let col = col('.') - 1
 		return !col || getline('.')[col - 1]  =~ '\s'
@@ -406,3 +449,12 @@ if has('nvim')
 	" }}}
 endif
 " --}}}
+
+" for FastFold {{{
+let g:fastfold_savehook = 1
+let g:fastfold_fdmhook = 1
+nmap zuz <Plug>(FastFoldUpdate)
+let g:fastfold_fold_command_suffixes = ['x','X','a','A','o','O','c','C','r','R','m','M','i','n','N']
+let g:fastfold_fold_movement_commands = [']z', '[z', 'zj', 'zk']
+let g:fastfold_minlines = 0
+" }}}
