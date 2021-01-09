@@ -184,18 +184,18 @@ if [ -f ~/.bash_functions ]; then
 	. ~/.bash_functions
 fi
 
-# disable beep sound
-if [[ "$DISPLAY" ]]; then
-#	echo "xset b off"
-	xset b off
-else
-#	echo "setterm -blength 0"
-	setterm blength 0
-fi
+# # disable beep sound
+# if [[ "$DISPLAY" ]]; then
+# #	echo "xset b off"
+# 	xset b off
+# else
+# #	echo "setterm -blength 0"
+# 	setterm blength 0
+# fi
 
-# alias vim/vi to noevim
-alias vi=nvim
-alias vim=nvim
+# # alias vim/vi to noevim
+# alias vi=nvim
+# alias vim=nvim
 
 # put script folder to path
 export PATH=~/git-repos/linuxSettings/scripts/:$PATH

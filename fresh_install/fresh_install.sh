@@ -5,17 +5,17 @@ sudo apt install vim neovim tmux git git-gui gitk dconf-cli
 sudo apt install bash-completion exuberant-ctags
 sudo apt install python3 python3-pip
 # for Chinese fonts
-sudo apt install fonts-wqy-microhei fonts-wqy-zenhei xfonts-wqy
+# sudo apt install fonts-wqy-microhei fonts-wqy-zenhei xfonts-wqy
 
-### show user name in the lightdm greeter
-echo "Enable the user in the lightdm greeter..."
-sudo cp config_files/02_enable_users.conf /usr/share/lightdm/lightdm.conf.d/
-echo "Done."
+# ### show user name in the lightdm greeter
+# echo "Enable the user in the lightdm greeter..."
+# sudo cp config_files/02_enable_users.conf /usr/share/lightdm/lightdm.conf.d/
+# echo "Done."
 
-### change the swapiness to 10, which is recommended for linux desktop
-echo "Changing the system swapiness..."
-sudo cp config_files/90-swapiness.conf /etc/sysctl.d/
-echo "Done."
+# ### change the swapiness to 10, which is recommended for linux desktop
+# echo "Changing the system swapiness..."
+# sudo cp config_files/90-swapiness.conf /etc/sysctl.d/
+# echo "Done."
 
 ### Set PulseAudio per-application control
 echo "Set PulseAudio for per-application control..."
@@ -42,31 +42,31 @@ ln -fs $PWD/../dotfile/dot_bash_functions ~/.bash_functions
 source ~/.bashrc
 echo "Done."
 
-### install fonts
-#### for Menlo fonts
-for f in ~/.local/share/fonts/Menlo*; do
-	if [ ! -e $f ]; then
-		echo "Install fonts..."
-		pushd .
-		cd fonts/
-		./install.sh
-		popd
-		echo "Done."
-	fi
-	break
-done
-#### for Inconsolata fonts
-for f in ~/.local/share/fonts/Inconsolata*; do
-	if [ ! -e $f ]; then
-		echo "Install fonts..."
-		pushd .
-		cd fonts/
-		./install.sh
-		popd
-		echo "Done."
-	fi
-	break
-done
+# ### install fonts
+# #### for Menlo fonts
+# for f in ~/.local/share/fonts/Menlo*; do
+# 	if [ ! -e $f ]; then
+# 		echo "Install fonts..."
+# 		pushd .
+# 		cd fonts/
+# 		./install.sh
+# 		popd
+# 		echo "Done."
+# 	fi
+# 	break
+# done
+# #### for Inconsolata fonts
+# for f in ~/.local/share/fonts/Inconsolata*; do
+# 	if [ ! -e $f ]; then
+# 		echo "Install fonts..."
+# 		pushd .
+# 		cd fonts/
+# 		./install.sh
+# 		popd
+# 		echo "Done."
+# 	fi
+# 	break
+# done
 
 ### create configuration for nvim
 if [ ! -f ~/.config/nvim/init.vim ]; then
