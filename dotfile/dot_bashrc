@@ -150,10 +150,13 @@ if [ -x /usr/bin/dircolors ]; then
 fi
 
 # some more ls aliases
-alias ll='ls -alF'
+alias ll='ls -alhF'
 alias la='ls -A'
 alias lt='ls -lhrt'
 alias l='ls -CF'
+
+# some more alias
+alias du1level='du -h --max-depth=1'
 
 # Add an "alert" alias for long running commands.  Use like so:
 #   sleep 10; alert
@@ -200,5 +203,23 @@ fi
 # put script folder to path
 export PATH=~/git-repos/linuxSettings/scripts/:$PATH
 
+# prevent CTRL-D to exit the terminal
+export IGNOREEOF=20
+
 ## for fun
 fortune
+
+# >>> conda initialize >>>
+# !! Contents within this block are managed by 'conda init' !!
+__conda_setup="$('/home/huangshan/anaconda3/bin/conda' 'shell.bash' 'hook' 2> /dev/null)"
+if [ $? -eq 0 ]; then
+    eval "$__conda_setup"
+else
+    if [ -f "/home/huangshan/anaconda3/etc/profile.d/conda.sh" ]; then
+        . "/home/huangshan/anaconda3/etc/profile.d/conda.sh"
+    else
+        export PATH="/home/huangshan/anaconda3/bin:$PATH"
+    fi
+fi
+unset __conda_setup
+# <<< conda initialize <<<

@@ -1,7 +1,6 @@
 #!/bin/bash
 
-temp_file="out.tiff"
-intermediate_file="hop.pdf"
+intermediate_file="temp.pdf"
 final_file="$1"
 
 ## Pre-flight tests
@@ -14,14 +13,17 @@ final_file="$1"
 
 ## Batch scan PDF scanner
 
+## scan file
 echo "Scanning..."
-scanimage --batch --batch-count=1 --mode=color --format=tiff --resolution 300 > $temp_file
-echo "Temp file saved to: $temp_file"
+# scanimage --batch --mode=color --format=tiff --resolution 300
+# #echo "Temp file saved to: $temp_file"
+# 
+# ## Merge TIF and to PDF
+# tiffcp out*.tif hop.tif
+# convert hop.tif $intermediate_file
 
-## Merge TIF and to PDF
-
-tiffcp out*.tif hop.tif
-convert hop.tif $intermediate_file
+# use hp-scan to scan file
+hp-scan --mode=color --dest=file --output=$intermediate_file
 
 ## Shrink PDF
 
@@ -48,6 +50,7 @@ echo "File saved to: $final_file"
 ## Cleaning
 
 echo "Cleaning ..."
-rm out*.tif hop.tif $intermediate_file
+#rm out*.tif hop.tif $intermediate_file
+rm $intermediate_file
 
 echo "Done!"
