@@ -1,5 +1,6 @@
 #!/bin/bash
 
+temp_file="out.tiff"
 intermediate_file="hop.pdf"
 final_file="$1"
 
@@ -14,7 +15,7 @@ final_file="$1"
 ## Batch scan PDF scanner
 
 echo "Scanning..."
-scanimage --batch --mode=color --format=tiff --resolution 300
+scanimage --batch --batch-count=1 --mode=color --format=tiff --resolution 300 > $temp_file
 echo "Temp file saved to: $temp_file"
 
 ## Merge TIF and to PDF
