@@ -45,10 +45,6 @@ Plugin 'roxma/nvim-yarp'
 Plugin 'roxma/vim-hug-neovim-rpc'
 endif
 
-" snippet
-Plugin 'SirVer/ultisnips'
-Plugin 'honza/vim-snippets'
-
 " auto complete words
 Plugin 'ujihisa/neco-look'
 " snippets
@@ -409,12 +405,36 @@ let g:indentLine_enabled = 0
 let g:indentLine_char = '┊'
 "}}}
 
-" for ultisnips --{{{
-let g:UltiSnipsExpandTrigger="<c-k>"
-let g:UltiSnipsJumpForwardTrigger="<c-k>"
-let g:UltiSnipsJumpBackwardTrigger="<c-b>"
-let g:UltiSnipsEnableSnipMate = 1
-" --}}}
+" for FastFold {{{
+let g:fastfold_savehook = 1
+let g:fastfold_fdmhook = 1
+nmap zuz <Plug>(FastFoldUpdate)
+let g:fastfold_fold_command_suffixes = ['x','X','a','A','o','O','c','C','r','R','m','M','i','n','N']
+let g:fastfold_fold_movement_commands = [']z', '[z', 'zj', 'zk']
+let g:fastfold_minlines = 0
+" }}}
+
+" For neosnippet {{{
+" Plugin key-mappings.
+" Note: It must be "imap" and "smap".  It uses <Plug> mappings.
+imap <C-k>     <Plug>(neosnippet_expand_or_jump)
+smap <C-k>     <Plug>(neosnippet_expand_or_jump)
+xmap <C-k>     <Plug>(neosnippet_expand_target)
+
+" SuperTab like snippets behavior.
+" Note: It must be "imap" and "smap".  It uses <Plug> mappings.
+"imap <expr><TAB>
+" \ pumvisible() ? "\<C-n>" :
+" \ neosnippet#expandable_or_jumpable() ?
+" \    "\<Plug>(neosnippet_expand_or_jump)" : "\<TAB>"
+smap <expr><TAB> neosnippet#expandable_or_jumpable() ?
+\ "\<Plug>(neosnippet_expand_or_jump)" : "\<TAB>"
+
+" For conceal markers.
+if has('conceal')
+  set conceallevel=2 concealcursor=nc
+endif
+" }}}
 
 " for  deoplete --{{{
 let g:deoplete#enable_at_startup = 1
@@ -450,68 +470,3 @@ autocmd Filetype verilog_systemverilog silent! iunmap <silent><expr> <TAB>
 "	tnoremap <Esc> <C-\><C-n>
 "	set clipboard+=unnamedplus
 "endif
-
-" " For neosnippet {{{
-" " Plugin key-mappings.
-" " Note: It must be "imap" and "smap".  It uses <Plug> mappings.
-" imap <C-k>     <Plug>(neosnippet_expand_or_jump)
-" smap <C-k>     <Plug>(neosnippet_expand_or_jump)
-" xmap <C-k>     <Plug>(neosnippet_expand_target)
-" 
-" " SuperTab like snippets behavior.
-" " Note: It must be "imap" and "smap".  It uses <Plug> mappings.
-" "imap <expr><TAB>
-" " \ pumvisible() ? "\<C-n>" :
-" " \ neosnippet#expandable_or_jumpable() ?
-" " \    "\<Plug>(neosnippet_expand_or_jump)" : "\<TAB>"
-" smap <expr><TAB> neosnippet#expandable_or_jumpable() ?
-" \ "\<Plug>(neosnippet_expand_or_jump)" : "\<TAB>"
-" 
-" " For conceal markers.
-" if has('conceal')
-"   set conceallevel=2 concealcursor=nc
-" endif
-" " }}}
-" 
-" " For neovim only configurations--{{{
-" if has('nvim')
-" 	tnoremap <Esc> <C-\><C-n>
-" 	set clipboard+=unnamedplus
-" 	set inccommand=nosplit
-" 
-" 	"  deoplete{{{
-" 	let g:deoplete#enable_at_startup = 1
-" 	call deoplete#custom#option( {
-" 				\ 'smart_case': v:true,
-" 				\ })
-" 	" use head matching but not fuzzy matching
-" 	call deoplete#custom#source('_', 'matchers', ['matcher_head'])
-" 
-" 	"use tab for auto completion
-" 	inoremap <silent><expr> <TAB>
-" 				\ pumvisible() ? "\<C-n>" :
-" 				\ <SID>check_back_space() ? "\<TAB>" :
-" 				\ deoplete#manual_complete()
-" 	function! s:check_back_space() abort
-" 		let col = col('.') - 1
-" 		return !col || getline('.')[col - 1]  =~ '\s'
-" 	endfunction
-" 
-" 	" disable auto completion for vhdl,verilog
-" 	autocmd Filetype vhd,vhdl,verilog silent! iunmap <silent><expr> <TAB>
-" 	"autocmd Filetype vhd,vhdl,verilog call deoplete#custom#buffer_option('auto_complete', v:false)
-" 
-" 	autocmd Filetype verilog_systemverilog silent! iunmap <silent><expr> <TAB>
-" 	"autocmd Filetype verilog_systemverilog call deoplete#custom#buffer_option('auto_complete', v:false)
-" 	" }}}
-" endif
-" --}}}
-
-" for FastFold {{{
-let g:fastfold_savehook = 1
-let g:fastfold_fdmhook = 1
-nmap zuz <Plug>(FastFoldUpdate)
-let g:fastfold_fold_command_suffixes = ['x','X','a','A','o','O','c','C','r','R','m','M','i','n','N']
-let g:fastfold_fold_movement_commands = [']z', '[z', 'zj', 'zk']
-let g:fastfold_minlines = 0
-" }}}
