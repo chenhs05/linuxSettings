@@ -34,6 +34,7 @@ Plugin 'godlygeek/tabular'
 Plugin 'plasticboy/vim-markdown'
 Plugin 'mzlogin/vim-markdown-toc'
 Plugin 'yggdroot/indentline'
+Plugin 'machakann/vim-highlightedyank'
 
 " snips and auto complete
 " neocomplete
