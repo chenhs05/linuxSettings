@@ -21,9 +21,10 @@ Plugin 'gmarik/Vundle.vim'
 " Keep Plugin commands between vundle#begin/end.
 Plugin 'tpope/vim-fugitive'
 Plugin 'tpope/vim-surround'
+Plugin 'tpope/vim-repeat'
 Plugin 'scrooloose/nerdtree'
 Plugin 'xuyuanp/nerdtree-git-plugin'
-Plugin 'airblade/vim-gitgutter'
+Plugin 'mhinz/vim-signify'
 Plugin 'xolox/vim-misc'
 Plugin 'xolox/vim-easytags'
 Plugin 'lervag/vimtex'
@@ -33,6 +34,8 @@ Plugin 'vim-airline/vim-airline-themes'
 Plugin 'godlygeek/tabular'
 Plugin 'plasticboy/vim-markdown'
 Plugin 'mzlogin/vim-markdown-toc'
+Plugin 'iamcco/markdown-preview.nvim'
+Plugin 'dhruvasagar/vim-table-mode'
 Plugin 'yggdroot/indentline'
 Plugin 'Konfekt/FastFold'
 Plugin 'machakann/vim-highlightedyank'
@@ -154,6 +157,7 @@ else
 endif
 colorscheme solarized
 "colorscheme PaperColor
+"highlight clear SignColumn
 " }}}
 
 " function: Enable and disable mouse use {{{
@@ -236,9 +240,9 @@ set diffopt+=vertical
 let g:tex_flavor = 'latex'
 
 " truncate the length of the line
-"autocmd Filetype tex setlocal textwidth=79
+autocmd Filetype tex setlocal textwidth=79
 autocmd Filetype tex setlocal spell
-autocmd Filetype tex setlocal softtabstop=2 tabstop=2 sw=2
+autocmd Filetype tex setlocal softtabstop=2 tabstop=2 sw=2 expandtab
 autocmd Filetype tex setlocal breakindent
 
 " to format the tex such that vim insert a line break afte each sentence
@@ -287,10 +291,10 @@ if has('nvim')
 	"" set up compiler callback
 	let g:vimtex_compiler_progname = 'nvr'
 
-	if !exists('g:deoplete#omni#input_patterns')
-		let g:deoplete#omni#input_patterns = {}
-	endif
-	let g:deoplete#omni#input_patterns.tex = g:vimtex#re#deoplete
+	call deoplete#custom#var('omni', 'input_patterns', {
+	  \ 'tex': g:vimtex#re#deoplete
+	  \})
+
 endif
 
 
@@ -353,6 +357,7 @@ augroup END
 
 " modifier key for suspending autoformat
 let g:pencil#map#suspend_af = 'K'   " default is no mapping
+let g:pencil#conceallevel = 0     " 0=disable, 1=one char, 2=hide char, 3=hide all (def)
 " }}}
 
 " for nerdcommenter {{{
@@ -368,9 +373,14 @@ set secure
 au BufRead ~/.tmp/mutt-* set tw=72
 "--}}}
 
-" For gitgutter {{{
-set updatetime=1000
-" }}}
+" for signify
+let g:signify_sign_change     = '~'
+let g:signify_sign_show_count = 0
+"
+
+" " For gitgutter {{{
+" set updatetime=1000
+" " }}}
 
 " For Vimwiki {{{
 " use markdown syntax for Vimwiki
@@ -410,9 +420,12 @@ xmap <C-k>     <Plug>(neosnippet_expand_target)
 smap <expr><TAB> neosnippet#expandable_or_jumpable() ?
 \ "\<Plug>(neosnippet_expand_or_jump)" : "\<TAB>"
 
+" disable preview window
+set completeopt-=preview
+
 " For conceal markers.
 if has('conceal')
-  set conceallevel=2 concealcursor=nc
+  set concealcursor=nc
 endif
 " }}}
 
